@@ -23,7 +23,7 @@ bot.command :score do |event, *team|
   elsif score.end_with? "  "
     event.respond "#{score}"
   else
-    rr = runrate(score)
+    rr = Cric.runrate(score)
     event.respond "#{score} - #{rr} RPO"
   end
 end
