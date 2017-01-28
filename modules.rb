@@ -49,7 +49,7 @@ module Cric
       result[:final] = "#{result[:schedule]} against #{result[:team]} on #{result[:date]}." << " "
       result[:final]
     elsif score["matchStarted"] == true and score["innings-requirement"].include?('toss')
-      score-dirty = score["score"]
+      score_dirty = score["score"]
       result[:final] = score_dirty.sub(/^([\w ]+) (\d+)\/(\d+)/, '\1 \3/\2')
       result[:final]
     end
