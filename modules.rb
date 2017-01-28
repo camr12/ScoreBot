@@ -51,7 +51,7 @@ module Cric
     elsif score["matchStarted"] == true and score["innings-requirement"].include?('won')
       result[:final] = score["innings-requirement"] << "  "
       result[:final]
-    elsif score["matchStarted"] == true
+    elsif score["matchStarted"] == true and score["innings-requirement"].include?('toss')
       score-dirty = score["score"]
       result[:final] = score_dirty.sub(/^([\w ]+) (\d+)\/(\d+)/, '\1 \3/\2')
       result[:final]
