@@ -9,7 +9,7 @@ module Cric
 
   def Cric.gmt(time=nil) # fix this, shouldn't be using local_to_utc - it doesn't make sense
     tz = TZInfo::Timezone.get('Australia/Sydney')
-    time = 'UTC'
+    time = ' UTC'
     time = Time.parse(time)
     time = tz.local_to_utc(time)
     tz.strftime('%Y-%m-%d %H:%M:%S %Z', time)
@@ -37,7 +37,7 @@ module Cric
     elsif score["innings-requirement"].include?('scheduled') and score["team-2"].include?(team)
       result[:schedule] = score["innings-requirement"]
       result[:team] = score["team-1"]
-      result[:date_raw] = Time.parse(gmt(score[:dateTimeGMT]))
+      result[:date_raw] = Time.parse(gmt(score["dateTimeGMT"]))
       result[:date] = result[:date_raw].strftime("%B %-d, %Y")
       result[:final] = "#{result[:schedule]} against #{result[:team]} on #{result[:date]}." << "  "
       result[:final]
@@ -56,9 +56,7 @@ module Cric
       result[:final] = "#{score_clean} - #{rr} RPO. \n \n#{required}"
       result[:final]
     elsif score["matchStarted"] == true and !(score["innings-requirement"].include?("toss")) and score["innings-requirement"].include?("won")
-      result[:date_raw] = Time.parse(gmt(score[:dateTimeGMT]))
-      result[:date] = result[:date_raw].strftime("%B %-d, %Y")
-      result[:final] = "#{score["innings-requirement"]} on #{result[:date]}"
+      result[:final] = score["innings-requirement"]
       result[:final]
     elsif score["matchStarted"] == true
       score_dirty = score["score"]
