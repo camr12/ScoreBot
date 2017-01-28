@@ -1,0 +1,1 @@
+1. When there are two entries in match_list for a team, select the most recent (or oldest? not sure)
