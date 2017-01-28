@@ -48,9 +48,18 @@ module Cric
       result[:date] = result[:date_raw].strftime("%B %-d, %Y")
       result[:final] = "#{result[:schedule]} against #{result[:team]} on #{result[:date]}." << " "
       result[:final]
+    elsif score["matchStarted"] == true and !(score["innings-requirement"].include?("toss"))
+      score_dirty = score["score"]
+      score_clean = score_dirty.sub(/^([\w ]+) (\d+)\/(\d+)/, '\1 \3/\2')
+      rr = Cric.runrate(score_clean)
+      required = score["innings-requirement"]
+      result[:final] = "#{score_clean} - #{rr} RPO. \n \n#{required}"
+      result[:final]
     elsif score["matchStarted"] == true
       score_dirty = score["score"]
-      result[:final] = score_dirty.sub(/^([\w ]+) (\d+)\/(\d+)/, '\1 \3/\2')
+      rr = Cric.runrate(score_dirty)
+      score_clean = score_dirty.sub(/^([\w ]+) (\d+)\/(\d+)/, '\1 \3/\2')
+      result[:final] = "#{score_clean} \n \n#{rr} RPO"
       result[:final]
     end
   end

@@ -13,19 +13,7 @@ bot = Discordrb::Commands::CommandBot.new token: '***REMOVED***', client_id: ***
 bot.command :score do |event, *team|
   newteam = team.join(" ")
   score = Cric.cricket_score(newteam)
-
-  if score.end_with? "."
-    event.respond "#{score}"
-  elsif score.end_with? ". "
-    event.respond "#{score}"
-  elsif score.end_with? "    "
-    event.respond "#{score}"
-  elsif score.end_with? "  "
-    event.respond "#{score}"
-  else
-    rr = Cric.runrate(score)
-    event.respond "#{score} - #{rr} RPO"
-  end
+  event.respond "#{score}"
 end
 
 bot.command(:delete, min_args: 1) do |event, amount|
