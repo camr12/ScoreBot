@@ -48,10 +48,10 @@ module Cric
       result[:date] = result[:date_raw].strftime("%B %-d, %Y")
       result[:final] = "#{result[:schedule]} against #{result[:team]} on #{result[:date]}." << " "
       result[:final]
-    elsif score["matchStarted"] == true and score["innings-requirement"].include?('won')
+    elsif score["matchStarted"] == true and score["innings-requirement"].include?('elected')
       result[:final] = score["innings-requirement"] << "  "
       result[:final]
-    elsif score["matchStarted"] == true and score["innings-requirement"].include?('toss')
+    elsif score["matchStarted"] == true
       score-dirty = score["score"]
       result[:final] = score_dirty.sub(/^([\w ]+) (\d+)\/(\d+)/, '\1 \3/\2')
       result[:final]
