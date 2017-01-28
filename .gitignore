@@ -2,3 +2,5 @@
 scorebot.sublime-workspace
 scorebot.sublime-project
 vendor/
+.bundle
+.vendor
