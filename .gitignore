@@ -4,3 +4,4 @@ scorebot.sublime-project
 vendor/
 .bundle
 .vendor
+.rubocop.yml
