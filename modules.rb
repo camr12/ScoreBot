@@ -61,7 +61,7 @@ module Cric
       result[:final]
     elsif score['matchStarted'] == true && !score['innings-requirement'].include?('toss') && score['innings-requirement'].include?('won')
       result[:date_raw] = Time.parse(gmt(score['dateTimeGMT']))
-      result[:date] = result[:date_raw].strftime('%A %e %B at%l %p Sydney time.')
+      result[:date] = result[:date_raw].strftime('%A %e %B at %l %p Sydney time.')
       result[:final] = "#{score['innings-requirement']} on #{result[:date]}"
       result[:final]
     elsif score['matchStarted'] == true
