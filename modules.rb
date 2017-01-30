@@ -85,7 +85,8 @@ end
       result[:final]
     elsif score['matchStarted'] == true && !score['innings-requirement'].include?('toss') && score['innings-requirement'].include?('won')
       result[:date] = gmtdate(score['dateTimeGMT'])
-      result[:final] = "#{score['innings-requirement']} on #{result[:date]}"
+      result[:scorecard] = "<http://www.espncricinfo.com/ci/engine/match/#{id}.html>"
+      result[:final] = "#{score['innings-requirement']} on #{result[:date]}.\nLink to scorecard: #{result[:scorecard]}"
       result[:final]
     elsif score['matchStarted'] == true
       tz = TZInfo::Timezone.get('Australia/Sydney')
