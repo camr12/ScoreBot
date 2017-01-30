@@ -77,18 +77,21 @@ end
       score_clean = score_dirty.sub(/^([\w ]+) (\d+)\/(\d+)/, '\1 \3/\2')
       rr = Cric.runrate(score_clean)
       required = score['innings-requirement']
-      result[:final] = "#{score_clean} - #{rr} RPO. \n \n#{required}"
+      published = Time.parse(score['provider']['pubDate'])
+      pub_date2 = published.strftime('%H:%M %p')
+      result[:final] = "#{score_clean} - #{rr} RPO. At #{pub_date2}. \n \n#{required}"
       result[:final]
     elsif score['matchStarted'] == true && !score['innings-requirement'].include?('toss') && score['innings-requirement'].include?('won')
-      result[:date_raw] = Time.parse(gmttime(score['dateTimeGMT']))
-      result[:date] = result[:date_raw].strftime('%A %e %B.')
+      result[:date] = gmtdate(score['dateTimeGMT'])
       result[:final] = "#{score['innings-requirement']} on #{result[:date]}"
       result[:final]
     elsif score['matchStarted'] == true
       score_dirty = score['score']
+      published = Time.parse(score['provider']['pubDate'])
+      pub_date2 = published.strftime('%H:%M %p')
       rr = runrate(score_dirty)
       score_clean = score_dirty.sub(/^([\w ]+) (\d+)\/(\d+)/, '\1 \3/\2')
-      result[:final] = "#{score_clean} \n \n#{rr} RPO"
+      result[:final] = "#{score_clean} - #{rr} RPO at #{pub_date2}"
       result[:final]
     end
   end
