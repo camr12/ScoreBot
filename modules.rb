@@ -73,25 +73,29 @@ end
       result[:final] = "#{result[:schedule]}against #{result[:team]} on #{result[:date]}." << ' '
       result[:final]
     elsif score['matchStarted'] == true && !score['innings-requirement'].include?('toss') && !score['innings-requirement'].include?('won')
+      tz = TZInfo::Timezone.get('Australia/Sydney')
       score_dirty = score['score']
       score_clean = score_dirty.sub(/^([\w ]+) (\d+)\/(\d+)/, '\1 \3/\2')
       rr = Cric.runrate(score_clean)
       required = score['innings-requirement']
       published = Time.parse(score['provider']['pubDate'])
-      pub_date2 = published.strftime('%H:%M %p')
-      result[:final] = "#{score_clean} - #{rr} RPO. At #{pub_date2}. \n \n#{required}"
+      pub_date1 = tz.utc_to_local(published)
+      pub_date2 = pub_date1.strftime('%I:%M %p')
+      result[:final] = "#{score_clean} - #{rr} RPO. Updated at #{pub_date2}. \n \n#{required}"
       result[:final]
     elsif score['matchStarted'] == true && !score['innings-requirement'].include?('toss') && score['innings-requirement'].include?('won')
       result[:date] = gmtdate(score['dateTimeGMT'])
       result[:final] = "#{score['innings-requirement']} on #{result[:date]}"
       result[:final]
     elsif score['matchStarted'] == true
+      tz = TZInfo::Timezone.get('Australia/Sydney')
       score_dirty = score['score']
       published = Time.parse(score['provider']['pubDate'])
-      pub_date2 = published.strftime('%H:%M %p')
+      pub_date1 = tz.utc_to_local(published)
+      pub_date2 = pub_date1.strftime('%I:%M %p')
       rr = runrate(score_dirty)
       score_clean = score_dirty.sub(/^([\w ]+) (\d+)\/(\d+)/, '\1 \3/\2')
-      result[:final] = "#{score_clean} - #{rr} RPO at #{pub_date2}"
+      result[:final] = "#{score_clean} - #{rr} RPO. Updated at #{pub_date2}."
       result[:final]
     end
   end
