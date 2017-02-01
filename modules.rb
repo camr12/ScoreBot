@@ -72,6 +72,9 @@ end
       result[:schedule].gsub!(/\(\d\d:\d\d GMT\)/, "")
       result[:final] = "#{result[:schedule]}against #{result[:team]} on #{result[:date]}." << ' '
       result[:final]
+    elsif score['matchStarted'] == true && score['innings-requirement'].include?('toss')
+      result[:toss] = score['innings-requirement']
+      result[:final] = "#{result[:toss]}"
     elsif score['matchStarted'] == true && !score['innings-requirement'].include?('toss') && !score['innings-requirement'].include?('won')
       tz = TZInfo::Timezone.get('Australia/Sydney')
       score_dirty = score['score']
