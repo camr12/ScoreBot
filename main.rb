@@ -10,7 +10,7 @@ require './modules.rb'
 
 bot = Discordrb::Commands::CommandBot.new token: '***REMOVED***', client_id: ***REMOVED***, prefix: '!'
 
-bot.command :score do |event, *team|
+bot.command :cricket do |event, *team|
   newteam = team.join(" ")
   score = Cric.cricket_score(newteam)
   event.respond "#{score}"
@@ -26,12 +26,10 @@ bot.command(:commands, max_args: 0) do |event|
   event.user.pm "To fetch the score for a match, do '!score <team name>', e.g. '!team Australia'."
 end
 
-
-
-bot.command(:clear, min_args: 1)
-
-# bot.command(:invite, chain_usable: false) do |event|
-#  event.bot.invite_url
-# end
+bot.command :afl do |event, *team|
+  newteam = team.join(" ")
+  score = Afl.afl_score(newteam)
+  event.respond "#{score}"
+end
 
 bot.run
