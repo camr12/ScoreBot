@@ -106,7 +106,7 @@ module Cric
 
   def self.runrate(score) # again, no nil - this isnt optional
     overs = /\(([0-9]+)\.([0-9]+)?/.match(score)[1]
-    runs = match_groups = /(\d+)\/(\d+)/.match(score)[2]
+    runs = match_groups = /(\d+)\/(\d+)/.match(score)[1]
     balls = /\(([0-9]+)\.([0-9]+)?/.match(score)[2]
     rate1 = runs.to_f * 6 / ((overs.to_f * 6) + balls.to_f)
     rate2 = '%.2f' % rate1
