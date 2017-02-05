@@ -133,7 +133,7 @@ module Afl
     matchesdirty = JSON.parse(Net::HTTP.get(uri)) # parse json as hash
     matchesclean = matchesdirty['c']['matches']
 
-    matchentrydirty = matchesclean.find {|v| v = shortteamclean}
+    matchentrydirty = matchesclean.find {|v| v['quickScore']['homeTeamName'] == shortteamclean || v['quickScore']['awayTeamName'] == shortteamclean }
     matchentryclean = matchentrydirty['quickScore']
 
     result = {}
