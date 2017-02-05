@@ -78,8 +78,8 @@ module Cric
     elsif score['matchStarted'] == true && !score['innings-requirement'].include?('toss') && !score['innings-requirement'].include?('won')
       tz = TZInfo::Timezone.get('Australia/Sydney')
       score_dirty = score['score']
+      rr = Cric.runrate(score_dirty)
       score_clean = score_dirty.sub(/^([\w ]+) (\d+)\/(\d+)/, '\1 \3/\2')
-      rr = Cric.runrate(score_clean)
       required = score['innings-requirement']
       published = Time.parse(score['provider']['pubDate'])
       pub_date1 = tz.utc_to_local(published)
