@@ -72,7 +72,7 @@ module Cric
       result[:schedule].gsub!(/\(\d\d:\d\d GMT\)/, "")
       result[:final] = "#{result[:schedule]}against #{result[:team]} on #{result[:date]}." << ' '
       result[:final]
-    elsif score['matchStarted'] == true && score['innings-requirement'].include?('toss')
+    elsif score['matchStarted'] == true && score['innings-requirement'].include?('toss') && !score.key?('score')
       result[:toss] = score['innings-requirement']
       result[:final] = "#{result[:toss]}"
     elsif score['matchStarted'] == true && !score['innings-requirement'].include?('toss') && !score['innings-requirement'].include?('won')
@@ -144,10 +144,10 @@ module Afl
       id = matchentryclean['matchID']
     end
 
-  
+
     result[:homeTeamDirty] = matchentryclean['homeTeamName']
     result[:homeTeam] =  teamnames.select {|_, v| v == result[:homeTeamDirty]}.keys[0]
-   
+
     result[:awayTeamDirty] = matchentryclean['awayTeamName']
     result[:awayTeam] = teamnames.select {|_, v| v == result[:awayTeamDirty]}.keys[0]
 
