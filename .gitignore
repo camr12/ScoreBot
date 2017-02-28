@@ -6,3 +6,5 @@ vendor/
 .vendor
 .rubocop.yml
 .vscode/
+scorebot.sublime-workspace
+scorebot.sublime-project
