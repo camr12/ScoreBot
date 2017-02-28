@@ -175,7 +175,7 @@ module Afl
   end
 
 def self.get_id(team)
-  curteam = team #temp hardcoded, pass in as var
+  curteam = team
   curteam = curteam.downcase
   curteam = curteam.gsub(/(\w+)/) {|s| s.capitalize}
   viewgames = open("http://dtlive.com.au/afl/viewgames.php").read
