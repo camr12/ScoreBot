@@ -229,9 +229,9 @@ def self.process_feed(gameid)
   data[:home_total] = data[:home_goals].to_i * 6 + data[:home_points].to_i
   data[:away_total] = data[:away_goals].to_i * 6 + data[:away_points].to_i
 
-  result[:final1] = "Game stats: #{data[:home_team]} vs #{data[:away_team]} at #{data[:location]} - Game Time: #{data[:current_time]} - QTR: #{data[:current_qtr]}"
-  result[:final2] = data[:home_total] > data[:away_total] ? "> #{data[:home_team]} #{data[:perc_complete] == 100 ? "WON" : "currently winning"} by #{(data[:home_total].to_i-data[:away_total].to_i)} points" : "> #{data[:away_team]} #{data[:perc_complete] == 100 ? "WON" : "currently winning"} by #{(data[:away_total].to_i-data[:home_total].to_i)} points"
-  result[:final3] = "#{data[:home_team]} - Goals:(#{data[:home_goals]}) Behinds: (#{data[:home_points]}) Total: (#{data[:home_total]}) vs #{data[:away_team]} - Goals:(#{data[:away_goals]}) Behinds: (#{data[:away_points]}) Total: (#{data[:away_total]})"
+  result[:final1] = "#{data[:home_team]} vs #{data[:away_team]} at #{data[:location]} - Game time: #{data[:current_time]} in Q#{data[:current_qtr]}"
+  result[:final2] = data[:home_total] > data[:away_total] ? "> #{data[:home_team]} #{data[:perc_complete] == 100 ? "Won" : "currently winning"} by #{(data[:home_total].to_i-data[:away_total].to_i)} points" : "> #{data[:away_team]} #{data[:perc_complete] == 100 ? "Won" : "currently winning"} by #{(data[:away_total].to_i-data[:home_total].to_i)} points"
+  result[:final3] = "#{data[:home_team]} - Goals: (#{data[:home_goals]}) Behinds: (#{data[:home_points]}) Total: (#{data[:home_total]}) *vs* #{data[:away_team]} - Goals: (#{data[:away_goals]}) Behinds: (#{data[:away_points]}) Total: (#{data[:away_total]})"
 
   result[:final] = "#{result[:final1]} \n#{result[:final2]} \n#{result[:final3]}"
 end
