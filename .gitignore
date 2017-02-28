@@ -8,3 +8,4 @@ vendor/
 .vscode/
 scorebot.sublime-workspace
 scorebot.sublime-project
+.idea/
