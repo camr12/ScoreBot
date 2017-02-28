@@ -5,6 +5,8 @@ require 'pp'
 require 'time'
 require 'uri'
 require 'net/http'
+require 'nokogiri'
+require 'open-uri'
 
 # Module for checking cricket scores/schedules using the CricAPI
 module Cric
@@ -172,4 +174,67 @@ module Afl
 
   end
 
+def self.get_id(team)
+  curteam = team #temp hardcoded, pass in as var
+  curteam = curteam.downcase
+  curteam = curteam.gsub(/(\w+)/) {|s| s.capitalize}
+  viewgames = open("http://dtlive.com.au/afl/viewgames.php").read
+
+  matches = viewgames.scan(/<a.*GameID=([0-9]+)">(.*?)#{curteam}(.*?)<\/a>/).flatten
+  gameid = matches[0] #game id
+
+  if gameid.scan('\d{4}')
+    process_feed(gameid)
+  end
 end
+
+def self.process_feed(gameid)
+  data = {}
+  result = {}
+  feed = open("http://dtlive.com.au/afl/xml/#{gameid}.xml").read
+  feed = Nokogiri::XML(feed)
+
+  feed.css('Game').each do |node|
+    children = node.children
+    children.each do |item|
+      case item.name
+        when "Location"
+          data[:location] = item.inner_html
+        when "CurrentQuarter"
+          data[:current_qtr] = item.inner_html
+        when "HomeTeam"
+          data[:home_team] = item.inner_html
+        when "HomeTeamShort"
+          data[:home_team_short] = item.inner_html
+        when "AwayTeam"
+          data[:away_team] = item.inner_html
+        when "AwayTeamShort"
+          data[:away_team_short] = item.inner_html
+        when "CurrentTime"
+          data[:current_time] = item.inner_html
+        when "PercComplete"
+          data[:perc_complete] = item.inner_html.to_i
+        when "HomeTeamGoal"
+          data[:home_goals] = item.inner_html
+        when "HomeTeamBehind"
+          data[:home_points] = item.inner_html
+        when "AwayTeamGoal"
+          data[:away_goals] = item.inner_html
+        when "AwayTeamBehind"
+          data[:away_points] = item.inner_html
+      end
+    end
+  end
+
+  data[:home_total] = data[:home_goals].to_i * 6 + data[:home_points].to_i
+  data[:away_total] = data[:away_goals].to_i * 6 + data[:away_points].to_i
+
+  result[:final1] = "Game stats: #{data[:home_team]} vs #{data[:away_team]} at #{data[:location]} - Game Time: #{data[:current_time]} - QTR: #{data[:current_qtr]}"
+  result[:final2] = data[:home_total] > data[:away_total] ? "> #{data[:home_team]} #{data[:perc_complete] == 100 ? "WON" : "currently winning"} by #{(data[:home_total].to_i-data[:away_total].to_i)} points" : "> #{data[:away_team]} #{data[:perc_complete] == 100 ? "WON" : "currently winning"} by #{(data[:away_total].to_i-data[:home_total].to_i)} points"
+  result[:final3] = "#{data[:home_team]} - Goals:(#{data[:home_goals]}) Behinds: (#{data[:home_points]}) Total: (#{data[:home_total]}) vs #{data[:away_team]} - Goals:(#{data[:away_goals]}) Behinds: (#{data[:away_points]}) Total: (#{data[:away_total]})"
+
+  result[:final] = "#{result[:final1]} \n#{result[:final2]} \n#{result[:final3]}"
+end
+
+end
+
