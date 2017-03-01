@@ -180,7 +180,7 @@ def self.get_id(team)
   viewgames = open("http://dtlive.com.au/afl/viewgames.php").read
 
   matches = viewgames.scan(/<a.*GameID=([0-9]+)">(.*?)#{team}(.*?)<\/a>/).flatten
-  gameid = matches[0]
+  gameid = matches[0] #gameid
 
   if gameid.scan('\d{4}')
     process_feed(gameid)
