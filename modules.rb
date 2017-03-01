@@ -175,13 +175,12 @@ module Afl
   end
 
 def self.get_id(team)
-  curteam = team #temp hardcoded, pass in as var
-  curteam = curteam.downcase
-  curteam = curteam.gsub(/(\w+)/) {|s| s.capitalize}
+  team = team.downcase
+  team = team.gsub(/(\w+)/) {|s| s.capitalize}
   viewgames = open("http://dtlive.com.au/afl/viewgames.php").read
 
-  matches = viewgames.scan(/<a.*GameID=([0-9]+)">(.*?)#{curteam}(.*?)<\/a>/).flatten
-  gameid = matches[0] #game id
+  matches = viewgames.scan(/<a.*GameID=([0-9]+)">(.*?)#{team}(.*?)<\/a>/).flatten
+  gameid = matches[0]
 
   if gameid.scan('\d{4}')
     process_feed(gameid)
@@ -229,12 +228,14 @@ def self.process_feed(gameid)
   data[:home_total] = data[:home_goals].to_i * 6 + data[:home_points].to_i
   data[:away_total] = data[:away_goals].to_i * 6 + data[:away_points].to_i
 
-  result[:final1] = "#{data[:home_team]} vs #{data[:away_team]} at #{data[:location]} - Game time: #{data[:current_time]} in Q#{data[:current_qtr]}"
-  result[:final2] = data[:home_total] > data[:away_total] ? "> #{data[:home_team]} #{data[:perc_complete] == 100 ? "won" : "currently winning"} by #{(data[:home_total].to_i-data[:away_total].to_i)} points" : "#{data[:away_team]} #{data[:perc_complete] == 100 ? "won" : "currently winning"} by #{(data[:away_total].to_i-data[:home_total].to_i)} points"
+  result[:final1] = "#{data[:home_team]} vs #{data[:away_team]} at #{data[:location]} - #{data[:perc_complete] == 100 ? "Game finished" : "Game time: #{data[:current_time]} in Q#{data[:current_qtr]}"}"
+  result[:final2] = data[:home_total] > data[:away_total] ? "#{data[:home_team]} #{data[:perc_complete] == 100 ? "won" : "currently winning"} by #{(data[:home_total].to_i-data[:away_total].to_i)} points" : "#{data[:away_team]} #{data[:perc_complete] == 100 ? "won" : "currently winning"} by #{(data[:away_total].to_i-data[:home_total].to_i)} points"
   result[:final3] = "#{data[:home_team]} - Goals: (#{data[:home_goals]}) Behinds: (#{data[:home_points]}) Total: (#{data[:home_total]}) *vs* #{data[:away_team]} - Goals: (#{data[:away_goals]}) Behinds: (#{data[:away_points]}) Total: (#{data[:away_total]})"
 
   result[:final] = "#{result[:final1]} \n#{result[:final2]} \n#{result[:final3]}"
 end
 
 end
+
+puts Afl.get_id('carlton')
 
