@@ -40,7 +40,7 @@ bot.command(:afl, bucket: :afl) do |event, *team|
   event.respond "#{score}"
 end
 
-bot.command (:a, bucket: :afl) do |event|
+bot.command(:a, bucket: :afl) do |event|
   newteam = "Australia"
   score = Cric.cricket_score(newteam)
   event.respond "#{score}"
