@@ -238,4 +238,5 @@ end
 end
 
 puts Afl.get_id('carlton')
+puts Afl.get_id('melbourne')
 
