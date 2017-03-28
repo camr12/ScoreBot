@@ -8,7 +8,7 @@ require './modules.rb'
 # Discord
 
 
-bot = Discordrb::Commands::CommandBot.new token: '***REMOVED***', client_id: ***REMOVED***, prefix: '!'
+bot = Discordrb::Commands::CommandBot.new token: '***REMOVED***', client_id: ***REMOVED***, prefix: '!', help_command: false
 
 bot.bucket :afl, limit: 1, time_span:900
 
