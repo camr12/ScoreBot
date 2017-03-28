@@ -234,9 +234,7 @@ def self.process_feed(gameid)
 
   result[:final] = "#{result[:final1]} \n#{result[:final2]} \n#{result[:final3]}"
 end
-
 end
-
 puts Afl.get_id('carlton')
-puts Afl.get_id('melbourne')
-
+puts Afl.get_id('St Kilda')
+puts Afl.get_id('North Melbourne')

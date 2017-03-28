@@ -10,7 +10,7 @@ require './modules.rb'
 
 bot = Discordrb::Commands::CommandBot.new token: '***REMOVED***', client_id: ***REMOVED***, prefix: '!'
 
-bot.bucket :afl, limit: 1, time_span:1800
+bot.bucket :afl, limit: 1, time_span:900
 
 bot.command(:cricket, bucket: :afl) do |event, *team|
   newteam = team.join(" ")
@@ -34,7 +34,7 @@ end
 #  event.respond "#{score}"
 #end
 
-bot.command(:afl, bucket: :afl) do |event, *team|
+bot.command(:afl) do |event, *team|
   newteam = team.join(" ")
   score = Afl.get_id(newteam)
   event.respond "#{score}"
@@ -46,4 +46,13 @@ bot.command(:a, bucket: :afl) do |event|
   event.respond "#{score}"
 end
 
+bot.command(:ladder, bucket: :afl) do |event|
+file = File.open("./ladder.png")
+event.channel.send_file(file)
+end
+
+bot.command(:liveladder, bucket: :afl) do |event|
+file = File.open("./live.png")
+event.channel.send_file(file)
+end
 bot.run

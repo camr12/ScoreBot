@@ -1,52 +1,59 @@
 GIT
   remote: https://github.com/meew0/discordrb.git
-  revision: 0d7f70a12b566b49c3b223639fdbbb634bfe7f12
+  revision: e53ba945af66946d91a57f1fb68f446e78e3dcad
   specs:
-    discordrb (3.1.1)
-      discordrb-webhooks
+    discordrb (3.2.1)
+      discordrb-webhooks (~> 3.2.0.1)
       opus-ruby
       rbnacl (~> 3.4.0)
       rest-client
       websocket-client-simple (>= 0.3.0)
-    discordrb-webhooks (0.1.0)
+    discordrb-webhooks (3.2.0.1)
       rest-client
 
 GEM
   remote: https://rubygems.org/
   specs:
-    activesupport (5.0.1)
-      concurrent-ruby (~> 1.0, >= 1.0.2)
+    activesupport (4.2.8)
       i18n (~> 0.7)
       minitest (~> 5.1)
+      thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
-    concurrent-ruby (1.0.4)
-    domain_name (0.5.20161129)
+    domain_name (0.5.20170223)
       unf (>= 0.0.5, < 1.0.0)
     event_emitter (0.2.5)
-    ffi (1.9.17)
+    ffi (1.9.18)
+    gastly (1.0.1)
+      mini_magick (~> 4.2)
+      phantomjs (~> 2.1.1)
     http-cookie (1.0.3)
       domain_name (~> 0.5)
-    i18n (0.7.0)
+    i18n (0.8.1)
     mime-types (3.1)
       mime-types-data (~> 3.2015)
     mime-types-data (3.2016.0521)
+    mini_magick (4.6.1)
+    mini_portile2 (2.1.0)
     minitest (5.10.1)
     netrc (0.11.0)
+    nokogiri (1.7.1)
+      mini_portile2 (~> 2.1.0)
     opus-ruby (1.0.1)
       ffi
+    phantomjs (2.1.1.0)
     rbnacl (3.4.0)
       ffi
-    rest-client (2.0.0)
+    rest-client (2.0.1)
       http-cookie (>= 1.0.2, < 2.0)
       mime-types (>= 1.16, < 4.0)
       netrc (~> 0.8)
-    thread_safe (0.3.5)
-    tzinfo (1.2.2)
+    thread_safe (0.3.6)
+    tzinfo (1.2.3)
       thread_safe (~> 0.1)
     unf (0.1.4)
       unf_ext
     unf_ext (0.0.7.2)
-    websocket (1.2.3)
+    websocket (1.2.4)
     websocket-client-simple (0.3.0)
       event_emitter
       websocket
@@ -57,6 +64,8 @@ PLATFORMS
 DEPENDENCIES
   activesupport
   discordrb!
+  gastly
+  nokogiri
   tzinfo
 
 BUNDLED WITH
