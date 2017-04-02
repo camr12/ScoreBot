@@ -192,6 +192,8 @@ def self.process_feed(gameid)
   feed = open("http://dtlive.com.au/afl/xml/#{gameid}.xml").read
   feed = Nokogiri::XML(feed)
 
+  teams = {"Port Adelaide" => ":port:", "Richmond" => ":tigers:", "Sydney" => ":swans:", "Gold Coast" => ":suns:", "Essendon" => ":dons:", "Hawthorn" => ":hawks:", "Brisbane" => ":lions:", "Melbourne" => ":dees:", "St Kilda" => ":saints:", "Fremantle" => ":freo:", "GWS Giants" => ":gws:", "North Melbourne" => ":norf:", "Carlton" => ":blues:", "Collingwood" => ":pies:", "Adelaide" => ":crows:", "Geelong" => ":cats", "West Coast" => ":eagles:", "Bulldogs" => ":dogs:"}
+
   feed.css('Game').each do |node|
     children = node.children
     children.each do |item|
@@ -231,7 +233,8 @@ def self.process_feed(gameid)
   result[:final2] = data[:home_total] > data[:away_total] ? "#{data[:home_team]} #{data[:perc_complete] == 100 ? "won" : "currently winning"} by #{(data[:home_total].to_i-data[:away_total].to_i)} points" : "#{data[:away_team]} #{data[:perc_complete] == 100 ? "won" : "currently winning"} by #{(data[:away_total].to_i-data[:home_total].to_i)} points"
   result[:final3] = "#{data[:home_team]} - Goals: (#{data[:home_goals]}) Behinds: (#{data[:home_points]}) Total: (#{data[:home_total]}) *vs* #{data[:away_team]} - Goals: (#{data[:away_goals]}) Behinds: (#{data[:away_points]}) Total: (#{data[:away_total]})"
 
-  result[:final] = "#{result[:final1]} \n#{result[:final2]} \n#{result[:final3]}"
+  #result[:final] = "#{result[:final1]} \n#{result[:final2]} \n#{result[:final3]}"
+  result[:final] = "#{teams["data[:home_team]"]} #{data[:home_points]}.#{data[:home_goals]}.#{data[:home_total]} - #{teams["data[:away_team]"]} #{data[:away_points]}.#{data[:away_goals]}.#{data[:away_total]}"
 end
 end
 puts Afl.get_id('carlton')
