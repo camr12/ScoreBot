@@ -234,7 +234,7 @@ def self.process_feed(gameid)
   result[:final3] = "#{data[:home_team]} - Goals: (#{data[:home_goals]}) Behinds: (#{data[:home_points]}) Total: (#{data[:home_total]}) *vs* #{data[:away_team]} - Goals: (#{data[:away_goals]}) Behinds: (#{data[:away_points]}) Total: (#{data[:away_total]})"
 
   #result[:final] = "#{result[:final1]} \n#{result[:final2]} \n#{result[:final3]}"
-  result[:final] = "#{teams["data[:home_team]"]} #{data[:home_points]}.#{data[:home_goals]}.#{data[:home_total]} - #{teams["data[:away_team]"]} #{data[:away_points]}.#{data[:away_goals]}.#{data[:away_total]}"
+  result[:final] = "#{teams[data[:home_team]]} #{data[:home_points]}.#{data[:home_goals]}.#{data[:home_total]} - #{teams[data[:away_team]]} #{data[:away_points]}.#{data[:away_goals]}.#{data[:away_total]}"
 end
 end
 puts Afl.get_id('carlton')
