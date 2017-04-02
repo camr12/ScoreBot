@@ -175,12 +175,12 @@ module Afl
   end
 
 def self.get_id(team)
-  team = team.downcase
-  team = team.gsub(/(\w+)/) {|s| s.capitalize}
+   team = "Brisbane"
+  team = team.split.map(&:capitalize).join(' ')
   viewgames = open("http://dtlive.com.au/afl/viewgames.php").read
+  viewgames[/GameID=(\d+)">[^>]+> #{team}/]
 
-  matches = viewgames.scan(/<a.*GameID=([0-9]+)">(.*?)#{team}(.*?)<\/a>/).flatten
-  gameid = matches[0] #gameid
+  gameid = $1
 
   if gameid.scan('\d{4}')
     process_feed(gameid)
