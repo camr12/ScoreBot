@@ -8,7 +8,7 @@ require './modules.rb'
 # Discord
 
 
-bot = Discordrb::Commands::CommandBot.new token: '***REMOVED***', client_id: ***REMOVED***, prefix: '!', help_command: false
+bot = Discordrb::Commands::CommandBot.new token: '***REMOVED***', client_id: ***REMOVED***, prefix: '!', help_command: falsep
 
 bot.bucket :afl, limit: 1, time_span:900
 
@@ -55,4 +55,8 @@ bot.command(:liveladder, bucket: :afl) do |event|
 file = File.open("./live.png")
 event.channel.send_file(file)
 end
+bot.command(:emotes, bucket: :afl) do |event|
+puts server.emoji.values.find { |e| e.name == v }.to_s] }.to_h 
+end
+  
 bot.run
