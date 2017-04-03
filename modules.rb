@@ -228,11 +228,30 @@ def self.process_feed(gameid)
   data[:home_total] = data[:home_goals].to_i * 6 + data[:home_points].to_i
   data[:away_total] = data[:away_goals].to_i * 6 + data[:away_points].to_i
 
-  result[:final1] = "#{data[:home_team]} vs #{data[:away_team]} at #{data[:location]} - #{data[:perc_complete] == 100 ? "Game finished" : "Game time: #{data[:current_time]} in Q#{data[:current_qtr]}"}"
-  result[:final2] = data[:home_total] > data[:away_total] ? "#{data[:home_team]} #{data[:perc_complete] == 100 ? "won" : "currently winning"} by #{(data[:home_total].to_i-data[:away_total].to_i)} points" : "#{data[:away_team]} #{data[:perc_complete] == 100 ? "won" : "currently winning"} by #{(data[:away_total].to_i-data[:home_total].to_i)} points"
-  result[:final3] = "#{data[:home_team]} - Goals: (#{data[:home_goals]}) Behinds: (#{data[:home_points]}) Total: (#{data[:home_total]}) *vs* #{data[:away_team]} - Goals: (#{data[:away_goals]}) Behinds: (#{data[:away_points]}) Total: (#{data[:away_total]})"
+  #result[:final1] = "#{data[:home_team]} vs #{data[:away_team]} at #{data[:location]} - #{data[:perc_complete] == 100 ? "Game finished" : "Game time: #{data[:current_time]} in Q#{data[:current_qtr]}"}"
+  #result[:final2] = data[:home_total] > data[:away_total] ? "#{data[:home_team]} #{data[:perc_complete] == 100 ? "won" : "currently winning"} by #{(data[:home_total].to_i-data[:away_total].to_i)} points" : "#{data[:away_team]} #{data[:perc_complete] == 100 ? "won" : "currently winning"} by #{(data[:away_total].to_i-data[:home_total].to_i)} points"
+  #result[:final3] = "#{data[:home_team]} - Goals: (#{data[:home_goals]}) Behinds: (#{data[:home_points]}) Total: (#{data[:home_total]}) *vs* #{data[:away_team]} - Goals: (#{data[:away_goals]}) Behinds: (#{data[:away_points]}) Total: (#{data[:away_total]})"
 
   #result[:final] = "#{result[:final1]} \n#{result[:final2]} \n#{result[:final3]}"
-  result[:final] = "#{teams[data[:home_team]]} #{data[:home_points]}.#{data[:home_goals]}.#{data[:home_total]} - #{teams[data[:away_team]]} #{data[:away_points]}.#{data[:away_goals]}.#{data[:away_total]}"
+  
+  result[:final1] = "#{data[:home_team]} vs #{data[:away_team]} at #{data[:location]} - #{data[:perc_complete] == 100 ? "Game finished" : "Game time: #{data[:current_time]} in Q#{data[:current_qtr]}"}"
+
+  result[:final2] = "#{teams[data[:home_team]]} #{data[:home_points]}.#{data[:home_goals]}.#{data[:home_total]} - #{teams[data[:away_team]]} #{data[:away_points]}.#{data[:away_goals]}.#{data[:away_total]}"
+
+  if data[:home_total].to_i > data[:away_total].to_i
+    data[:margin] = data[:home_total].to_i - data[:away_total].to_i
+    result[:final3] = "#{data[:home_team_short]} by #{data[:margin]}"
+  elsif data[:away_total].to_i > data[:home_total].to_i
+    data[:margin] = data[:away_total].to_i - data[:home_total].to_i
+    result[:final3] = "#{data[:away_team_short]} by #{data[:margin]}"
+  elsif data[:away_total].to_i = data[:home_total].to_i
+    data[:margin] = "0"
+    result[:final3] = "Scores level."
+  elsif data[:home_total].to_i = data[:away_total].to_i
+    data[:margin] = "0"
+    result[:final3] = "Scores level."
+  end
+
+  result[:final] = "#{result[:final1]} \n#{result[:final2]} \n#{result[:final3]}"
 end
 end
