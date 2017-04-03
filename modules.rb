@@ -193,7 +193,8 @@ def self.process_feed(gameid)
   feed = Nokogiri::XML(feed)
 
   teams = {"Port Adelaide" => ":port:", "Richmond" => ":tigers:", "Sydney" => ":swans:", "Gold Coast" => ":suns:", "Essendon" => ":dons:", "Hawthorn" => ":hawks:", "Brisbane" => ":lions:", "Melbourne" => ":dees:", "St Kilda" => ":saints:", "Fremantle" => ":freo:", "GWS Giants" => ":gws:", "North Melbourne" => ":norf:", "Carlton" => ":blues:", "Collingwood" => ":pies:", "Adelaide" => ":crows:", "Geelong" => ":cats", "West Coast" => ":eagles:", "Bulldogs" => ":dogs:"}
-
+  teams.map { |k,v| [k, server.emoji.values.find { |e| e.name == v }.to_s] }.to_h 
+  
   feed.css('Game').each do |node|
     children = node.children
     children.each do |item|
