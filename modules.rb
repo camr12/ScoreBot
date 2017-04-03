@@ -176,13 +176,12 @@ module Afl
 
 def self.get_id(team)
   team = team.split.map(&:capitalize).join(' ')
-  viewgames = open("http://dtlive.com.au/afl/viewgames.php").read
-  viewgames[/GameID=(\d+)">[^>]+>\s+(?<first_team>[^>]+)?\s+vs\s+[^>]+>\s+(?<second_team>#{team})\s+(?!upcoming)</][2][1]
+  games = open("http://dtlive.com.au/afl/viewgames.php").read
 
-  gameid = $1.to_s
+  gameid = games.match(/GameID=(\d+)">[^>]+>\s+(?:(#{team})\s+vs[^>]+>\s*([^>]+)|([^>]+)\s+vs[^>]+>\s*(#{team}))\s+(?!upcoming)</)[1]
 
-  
-    process_feed(gameid)
+
+  process_feed(gameid)
 
 end
 
