@@ -55,8 +55,5 @@ bot.command(:liveladder, bucket: :afl) do |event|
 file = File.open("./live.png")
 event.channel.send_file(file)
 end
-bot.command(:emotes, bucket: :afl) do |event|
-puts server.emoji.values.find { |e| e.name == v }.to_s] }.to_h 
-end
   
 bot.run
