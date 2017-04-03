@@ -238,6 +238,3 @@ def self.process_feed(gameid)
   result[:final] = "#{teams[data[:home_team]]} #{data[:home_points]}.#{data[:home_goals]}.#{data[:home_total]} - #{teams[data[:away_team]]} #{data[:away_points]}.#{data[:away_goals]}.#{data[:away_total]}"
 end
 end
-puts Afl.get_id('carlton')
-puts Afl.get_id('St Kilda')
-puts Afl.get_id('North Melbourne')
