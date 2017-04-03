@@ -252,6 +252,6 @@ def self.process_feed(gameid)
     result[:final3] = "Scores level."
   end
 
-  result[:final] = "#{result[:final1]} \n\t#{result[:final2]} \n\t#{result[:final3]}"
+  result[:final] = "#{result[:final1]} \n#{result[:final2]} \n#{result[:final3]}"
 end
 end
