@@ -184,7 +184,8 @@ def self.get_id(team)
 if in_progress.flatten.include?(team)
 gameid = in_progress.find { |a| a.include? team }.first
 elsif completed.flatten.include?(team)
-gameid = completed.find { |a| a.include? team }.first
+gameid_no_order = completed.find { |a| a.include? team }.first
+gameid = gameid_no_order.sort_by { |number,| number.to_i }.reverse
 end
 
   process_feed(gameid)
