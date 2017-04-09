@@ -184,9 +184,10 @@ def self.get_id(team)
 if in_progress.flatten.include?(team)
 gameid = in_progress.find { |a| a.include? team }.first
 elsif completed.flatten.include?(team)
-gameid_no_order = completed.find { |a| a.include? team }.first
-gameid_order_i = gameid_no_order.sort_by { |number,| number.to_i }.reverse
-gameid = gameid_order_i.to_s
+completed_ordered_whitespace = completed.sort_by { |number,| number.to_i }.reverse
+completed_ordered_no_whitespace = completed_ordered_whitespace.collect!{ |arr| arr.collect!{|x| x.strip! } }
+gameid_i = completed_ordered_no_whitespace.find { |a| a.include? team }.first
+gameid = gameid_i.to_s
 end
 
   process_feed(gameid)
