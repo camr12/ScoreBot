@@ -185,7 +185,8 @@ if in_progress.flatten.include?(team)
 gameid = in_progress.find { |a| a.include? team }.first
 elsif completed.flatten.include?(team)
 gameid_no_order = completed.find { |a| a.include? team }.first
-gameid = gameid_no_order.sort_by { |number,| number.to_i }.reverse
+gameid_order_i = gameid_no_order.sort_by { |number,| number.to_i }.reverse
+gameid = gameid_order_i.to_s
 end
 
   process_feed(gameid)
