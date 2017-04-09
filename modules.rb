@@ -184,10 +184,11 @@ def self.get_id(team)
 if in_progress.flatten.include?(team)
 gameid = in_progress.find { |a| a.include? team }.first
 elsif completed.flatten.include?(team)
-completed_ordered_whitespace = completed.sort_by { |number,| number.to_i }.reverse
-completed_ordered_no_whitespace = completed_ordered_whitespace.collect!{ |arr| arr.collect!{|x| x.strip! } }
-gameid_i = completed_ordered_no_whitespace.find { |a| a.include? team }.first
-gameid = gameid_i.to_s
+completed_ordered_whitespace = completed.sort_by { |number,| number.to_i }.reverse # sort completed matches by ID sequential order
+completed_ordered_whitespace.each &:compact! # remove nil elements
+completed_ordered_no_whitespace = completed_ordered_whitespace.collect{ |arr| arr.collect{|x| x.strip } } # remove whitespace
+gameid_i = completed_ordered_no_whitespace.find { |a| a.include? team }.first # find user team
+gameid = gameid_i.to_s # convert back to string
 end
 
   process_feed(gameid)
