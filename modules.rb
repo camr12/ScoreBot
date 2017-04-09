@@ -188,7 +188,7 @@ gameid = completed.find { |a| a.include? team }.first
 end
 
   process_feed(gameid)
-}
+
 
 end
 
