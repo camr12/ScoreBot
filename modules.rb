@@ -177,11 +177,18 @@ module Afl
 def self.get_id(team)
   team = team.split.map(&:capitalize).join(' ')
   games = open("http://dtlive.com.au/afl/viewgames.php").read
+  in_progress = games.scan(/GameID=(\d+)">[^>]+>\s+(?:([A-Za-z ]+[^<]+)\s+vs[^>]+>\s*([^>]+)|([^>]+)\s+vs[^>]+>\s*([A-Za-z ]+[^<]+))\s+\(in progress\)</)
+  completed = games.scan(/GameID=(\d+)">[^>]+>\s+(?:([A-Za-z ]+[^<]+)\s+vs[^>]+>\s*([^>]+)|([^>]+)\s+vs[^>]+>\s*([A-Za-z ]+[^<]+))<small>\(completed\)<\/small></)
+  #gameid = games.match(/GameID=(\d+)">[^>]+>\s+(?:(#{team})\s+vs[^>]+>\s*([^>]+)|([^>]+)\s+vs[^>]+>\s*(#{team}))\s+/)[1]
 
-  gameid = games.match(/GameID=(\d+)">[^>]+>\s+(?:(#{team})\s+vs[^>]+>\s*([^>]+)|([^>]+)\s+vs[^>]+>\s*(#{team}))\s+(?!upcoming)</)[1]
-
+if in_progress.flatten.include?(team)
+gameid = in_progress.find { |a| a.include? team }.first
+elsif completed.flatten.include?(team)
+gameid = completed.find { |a| a.include? team }.first
+end
 
   process_feed(gameid)
+}
 
 end
 
