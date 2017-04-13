@@ -247,7 +247,7 @@ def self.process_feed(gameid)
   
   result[:final1] = "**#{data[:home_team]}** vs **#{data[:away_team]}** at #{data[:location]} - #{data[:perc_complete] == 100 ? "Game finished" : "Game time: #{data[:current_time]} in Q#{data[:current_qtr]}"}"
 
-  result[:final2] = "#{teams[data[:home_team]]} #{data[:home_points]}.#{data[:home_goals]}.#{data[:home_total]} - #{teams[data[:away_team]]} #{data[:away_points]}.#{data[:away_goals]}.#{data[:away_total]}"
+  result[:final2] = "#{teams[data[:home_team]]} #{data[:home_goals]}.#{data[:home_points]}.#{data[:home_total]} - #{teams[data[:away_team]]} #{data[:away_goals]}.#{data[:away_points]}.#{data[:away_total]}"
 
   if data[:home_total].to_i > data[:away_total].to_i
     data[:margin] = data[:home_total].to_i - data[:away_total].to_i
