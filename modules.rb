@@ -255,10 +255,10 @@ def self.process_feed(gameid)
   elsif data[:away_total].to_i > data[:home_total].to_i
     data[:margin] = data[:away_total].to_i - data[:home_total].to_i
     result[:final3] = "*#{data[:away_team_short]} by #{data[:margin]}*"
-  elsif data[:away_total].to_i = data[:home_total].to_i
+  elsif data[:away_total].to_i == data[:home_total].to_i
     data[:margin] = "0"
     result[:final3] = "Scores level."
-  elsif data[:home_total].to_i = data[:away_total].to_i
+  elsif data[:home_total].to_i == data[:away_total].to_i
     data[:margin] = "0"
     result[:final3] = "Scores level."
   end
