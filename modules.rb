@@ -202,7 +202,7 @@ module Afl
     feed = open("http://dtlive.com.au/afl/xml/#{gameid}.xml").read
     feed = Nokogiri::XML(feed)
 
-    emotes = {"Adelaide Crows"=>"<:crows:240102697196453888>",
+    teams = {"Adelaide Crows"=>"<:crows:240102697196453888>",
               "Brisbane"=>"<:lions:240107932836954115>",
               "Carlton"=>"<:blues:240110286705524737>",
               "Collingwood"=>"<:pies:240111431226359809>",
