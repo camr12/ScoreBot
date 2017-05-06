@@ -174,40 +174,57 @@ module Afl
 
   end
 
-def self.get_id(team)
-  team = team.split.map(&:capitalize).join(' ')
-  games = open("http://dtlive.com.au/afl/viewgames.php").read
-  in_progress = games.scan(/GameID=(\d+)">[^>]+>\s+(?:([A-Za-z ]+[^<]+)\s+vs[^>]+>\s*([^>]+)|([^>]+)\s+vs[^>]+>\s*([A-Za-z ]+[^<]+))\s+\(in progress\)</)
-  completed = games.scan(/GameID=(\d+)">[^>]+>\s+(?:([A-Za-z ]+[^<]+)\s+vs[^>]+>\s*([^>]+)|([^>]+)\s+vs[^>]+>\s*([A-Za-z ]+[^<]+))<small>\(completed\)<\/small></)
-  #gameid = games.match(/GameID=(\d+)">[^>]+>\s+(?:(#{team})\s+vs[^>]+>\s*([^>]+)|([^>]+)\s+vs[^>]+>\s*(#{team}))\s+/)[1]
+  def self.get_id(team)
+    team = team.split.map(&:capitalize).join(' ')
+    games = open("http://dtlive.com.au/afl/viewgames.php").read
+    in_progress = games.scan(/GameID=(\d+)">[^>]+>\s+(?:([A-Za-z ]+[^<]+)\s+vs[^>]+>\s*([^>]+)|([^>]+)\s+vs[^>]+>\s*([A-Za-z ]+[^<]+))\s+\(in progress\)</)
+    completed = games.scan(/GameID=(\d+)">[^>]+>\s+(?:([A-Za-z ]+[^<]+)\s+vs[^>]+>\s*([^>]+)|([^>]+)\s+vs[^>]+>\s*([A-Za-z ]+[^<]+))<small>\(completed\)<\/small></)
+    #gameid = games.match(/GameID=(\d+)">[^>]+>\s+(?:(#{team})\s+vs[^>]+>\s*([^>]+)|([^>]+)\s+vs[^>]+>\s*(#{team}))\s+/)[1]
 
-if in_progress.flatten.include?(team)
-gameid = in_progress.find { |a| a.include? team }.first
-elsif completed.flatten.include?(team)
-completed_ordered_whitespace = completed.sort_by { |number,| number.to_i }.reverse # sort completed matches by ID sequential order
-completed_ordered_whitespace.each &:compact! # remove nil elements
-completed_ordered_no_whitespace = completed_ordered_whitespace.collect{ |arr| arr.collect{|x| x.strip } } # remove whitespace
-gameid_i = completed_ordered_no_whitespace.find { |a| a.include? team }.first # find user team
-gameid = gameid_i.to_s # convert back to string
-end
+    if in_progress.flatten.include?(team)
+      gameid = in_progress.find { |a| a.include? team }.first
+    elsif completed.flatten.include?(team)
+      completed_ordered_whitespace = completed.sort_by { |number,| number.to_i }.reverse # sort completed matches by ID sequential order
+      completed_ordered_whitespace.each &:compact! # remove nil elements
+      completed_ordered_no_whitespace = completed_ordered_whitespace.collect{ |arr| arr.collect{|x| x.strip } } # remove whitespace
+      gameid_i = completed_ordered_no_whitespace.find { |a| a.include? team }.first # find user team
+      gameid = gameid_i.to_s # convert back to string
+    end
 
-  process_feed(gameid)
+    process_feed(gameid)
 
 
-end
+  end
 
-def self.process_feed(gameid)
-  data = {}
-  result = {}
-  feed = open("http://dtlive.com.au/afl/xml/#{gameid}.xml").read
-  feed = Nokogiri::XML(feed)
+  def self.process_feed(gameid)
+    data = {}
+    result = {}
+    feed = open("http://dtlive.com.au/afl/xml/#{gameid}.xml").read
+    feed = Nokogiri::XML(feed)
 
-  teams = {"smith"=>"<:smith:240042008276762624>", "rampe"=>"<:rampe:240053403114405888>", "gwar"=>"<:gwar:240059260854206464>", "libba"=>"<:libba:240099232210616320>", "Adelaide Crows"=>"<:crows:240102697196453888>", "Brisbane"=>"<:lions:240107932836954115>", "Carlton"=>"<:blues:240110286705524737>", "Collingwood"=>"<:pies:240111431226359809>", "Essendon"=>"<:dons:240112429344751616>", "Geelong"=>"<:cats:240116808634335234>", "GWS Giants"=>"<:gws:240123319104438273>", "ban"=>"<:ban:240440589437370368>", "footy"=>"<:footy:246477699147759616>", "Hawthorn"=>"<:hawks:246532872217952266>", "Melbourne"=>"<:dees:246534269931880449>", "St Kilda"=>"<:saints:246535544106909697>", "Bulldogs"=>"<:dogs:246535548766912512>", "North Melbourne"=>"<:norf:246535714299314187>", "Port Adelaide"=>"<:port:246536450399666186>", "Sydney"=>"<:swans:246537524422377472>", "Richmond"=>"<:tigers:246537629225582592>", "bt"=>"<:bt:246541254182174720>", "Gold Coast"=>"<:suns:246541592612175872>", "eddie"=>"<:eddie:246543491981770752>", "chas"=>"<:chas:246544422613942272>", "pansy"=>"<:pansy:246545822982995969>", "jesus"=>"<:jesus:246553759478448128>", "cup"=>"<:cup:246554739611926528>", "matho"=>"<:matho:246631647141822464>", "swanny"=>"<:swanny:246868777881436161>", "ben"=>"<:ben:247630592609353738>", "betts"=>"<:betts:248050182917193728>", "patty"=>"<:patty:248050416363765760>", "gawn"=>"<:gawn:248052990399741962>", "zed"=>"<:zed:248058842703724544>", "Fremantle"=>"<:freo:248060573512761346>", "kouta"=>"<:kouta:248060624070901760>", "speer"=>"<:speer:251351305950461953>", "stat"=>"<:stat:258823346781814784>", "atlas"=>"<:atlas:258957146669056001>", "rip"=>"<:rip:261484652886228993>", "gorg"=>"<:gorg:262862205668556811>", "chuck"=>"<:chuck:263609738753867776>", "broad"=>"<:broad:269130182605012993>", "glaven"=>"<:glaven:271436073253601280>", "tubby"=>"<:tubby:272381501734387712>", "vicbias"=>"<:vicbias:275912832992804865>", "fyfe"=>"<:fyfe:279203514016858113>", "West Coast"=>"<:eagles:297781448507785216>"}
-  
-  feed.css('Game').each do |node|
-    children = node.children
-    children.each do |item|
-      case item.name
+    emotes = {"Adelaide Crows"=>"<:crows:240102697196453888>",
+              "Brisbane"=>"<:lions:240107932836954115>",
+              "Carlton"=>"<:blues:240110286705524737>",
+              "Collingwood"=>"<:pies:240111431226359809>",
+              "Essendon"=>"<:dons:240112429344751616>",
+              "Geelong"=>"<:cats:240116808634335234>",
+              "GWS Giants"=>"<:gws:240123319104438273>",
+              "Hawthorn"=>"<:hawks:246532872217952266>",
+              "Melbourne"=>"<:dees:246534269931880449>",
+              "St Kilda"=>"<:saints:246535544106909697>",
+              "Bulldogs"=>"<:dogs:246535548766912512>",
+              "North Melbourne"=>"<:norf:246535714299314187>",
+              "Port Adelaide"=>"<:port:246536450399666186>",
+              "Sydney"=>"<:swans:246537524422377472>",
+              "Richmond"=>"<:tigers:246537629225582592>",
+              "Gold Coast"=>"<:suns:246541592612175872>",
+              "Fremantle"=>"<:freo:248060573512761346>",
+              "West Coast"=>"<:eagles:297781448507785216>"}
+
+    feed.css('Game').each do |node|
+      children = node.children
+      children.each do |item|
+        case item.name
         when "Location"
           data[:location] = item.inner_html
         when "CurrentQuarter"
@@ -232,37 +249,37 @@ def self.process_feed(gameid)
           data[:away_goals] = item.inner_html
         when "AwayTeamBehind"
           data[:away_points] = item.inner_html
+        end
       end
     end
+
+    data[:home_total] = data[:home_goals].to_i * 6 + data[:home_points].to_i
+    data[:away_total] = data[:away_goals].to_i * 6 + data[:away_points].to_i
+
+    #result[:final1] = "#{data[:home_team]} vs #{data[:away_team]} at #{data[:location]} - #{data[:perc_complete] == 100 ? "Game finished" : "Game time: #{data[:current_time]} in Q#{data[:current_qtr]}"}"
+    #result[:final2] = data[:home_total] > data[:away_total] ? "#{data[:home_team]} #{data[:perc_complete] == 100 ? "won" : "currently winning"} by #{(data[:home_total].to_i-data[:away_total].to_i)} points" : "#{data[:away_team]} #{data[:perc_complete] == 100 ? "won" : "currently winning"} by #{(data[:away_total].to_i-data[:home_total].to_i)} points"
+    #result[:final3] = "#{data[:home_team]} - Goals: (#{data[:home_goals]}) Behinds: (#{data[:home_points]}) Total: (#{data[:home_total]}) *vs* #{data[:away_team]} - Goals: (#{data[:away_goals]}) Behinds: (#{data[:away_points]}) Total: (#{data[:away_total]})"
+
+    #result[:final] = "#{result[:final1]} \n#{result[:final2]} \n#{result[:final3]}"
+
+    result[:final1] = "**#{data[:home_team]}** vs **#{data[:away_team]}** at #{data[:location]} - #{data[:perc_complete] == 100 ? "Game finished" : "Game time: #{data[:current_time]} in Q#{data[:current_qtr]}"}"
+
+    result[:final2] = "#{teams[data[:home_team]]} #{data[:home_goals]}.#{data[:home_points]}.#{data[:home_total]} - #{teams[data[:away_team]]} #{data[:away_goals]}.#{data[:away_points]}.#{data[:away_total]}"
+
+    if data[:home_total].to_i > data[:away_total].to_i
+      data[:margin] = data[:home_total].to_i - data[:away_total].to_i
+      result[:final3] = "*#{data[:home_team_short]} by #{data[:margin]}*"
+    elsif data[:away_total].to_i > data[:home_total].to_i
+      data[:margin] = data[:away_total].to_i - data[:home_total].to_i
+      result[:final3] = "*#{data[:away_team_short]} by #{data[:margin]}*"
+    elsif data[:away_total].to_i == data[:home_total].to_i
+      data[:margin] = "0"
+      result[:final3] = "Scores level."
+    elsif data[:home_total].to_i == data[:away_total].to_i
+      data[:margin] = "0"
+      result[:final3] = "Scores level."
+    end
+
+    result[:final] = "#{result[:final1]} \n#{result[:final2]} \n#{result[:final3]}"
   end
-
-  data[:home_total] = data[:home_goals].to_i * 6 + data[:home_points].to_i
-  data[:away_total] = data[:away_goals].to_i * 6 + data[:away_points].to_i
-
-  #result[:final1] = "#{data[:home_team]} vs #{data[:away_team]} at #{data[:location]} - #{data[:perc_complete] == 100 ? "Game finished" : "Game time: #{data[:current_time]} in Q#{data[:current_qtr]}"}"
-  #result[:final2] = data[:home_total] > data[:away_total] ? "#{data[:home_team]} #{data[:perc_complete] == 100 ? "won" : "currently winning"} by #{(data[:home_total].to_i-data[:away_total].to_i)} points" : "#{data[:away_team]} #{data[:perc_complete] == 100 ? "won" : "currently winning"} by #{(data[:away_total].to_i-data[:home_total].to_i)} points"
-  #result[:final3] = "#{data[:home_team]} - Goals: (#{data[:home_goals]}) Behinds: (#{data[:home_points]}) Total: (#{data[:home_total]}) *vs* #{data[:away_team]} - Goals: (#{data[:away_goals]}) Behinds: (#{data[:away_points]}) Total: (#{data[:away_total]})"
-
-  #result[:final] = "#{result[:final1]} \n#{result[:final2]} \n#{result[:final3]}"
-  
-  result[:final1] = "**#{data[:home_team]}** vs **#{data[:away_team]}** at #{data[:location]} - #{data[:perc_complete] == 100 ? "Game finished" : "Game time: #{data[:current_time]} in Q#{data[:current_qtr]}"}"
-
-  result[:final2] = "#{teams[data[:home_team]]} #{data[:home_goals]}.#{data[:home_points]}.#{data[:home_total]} - #{teams[data[:away_team]]} #{data[:away_goals]}.#{data[:away_points]}.#{data[:away_total]}"
-
-  if data[:home_total].to_i > data[:away_total].to_i
-    data[:margin] = data[:home_total].to_i - data[:away_total].to_i
-    result[:final3] = "*#{data[:home_team_short]} by #{data[:margin]}*"
-  elsif data[:away_total].to_i > data[:home_total].to_i
-    data[:margin] = data[:away_total].to_i - data[:home_total].to_i
-    result[:final3] = "*#{data[:away_team_short]} by #{data[:margin]}*"
-  elsif data[:away_total].to_i == data[:home_total].to_i
-    data[:margin] = "0"
-    result[:final3] = "Scores level."
-  elsif data[:home_total].to_i == data[:away_total].to_i
-    data[:margin] = "0"
-    result[:final3] = "Scores level."
-  end
-
-  result[:final] = "#{result[:final1]} \n#{result[:final2]} \n#{result[:final3]}"
-end
 end
