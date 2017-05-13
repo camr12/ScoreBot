@@ -2,7 +2,7 @@ require 'gastly'
 require 'date'
 while true
   begin
-    screenshot = Gastly.screenshot('http://liveladders.com/afl/', selector: '.tablesorter-green', timeout:1000)
+    screenshot = Gastly.screenshot('http://liveladders.com/afl/', selector: '.tablesorter-green', timeout:1800000)
     image = screenshot.capture
     image.save('live.png')
     currenttime = Time.now.strftime("%d/%m/%Y %H:%M:%-S")
