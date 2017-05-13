@@ -6,7 +6,7 @@ while true
       image = screenshot.capture
       image.save('ladder.png')
       currenttime = Time.now.strftime("%d/%m/%Y %H:%M:%-S")
-      puts "Saved live ladder at #{currenttime}"
+      puts "Saved AFL ladder at #{currenttime}"
       rescue Ghastly::FetchError => e
         puts "Got an exception, restarting."
         next
