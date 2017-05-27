@@ -9,7 +9,6 @@ require 'nokogiri'
 require 'open-uri'
 require 'discordrb'
 
-bot = Discordrb::Commands::CommandBot.new token: '***REMOVED***', client_id: ***REMOVED***, prefix: '!', help_command: false
 
 
 # Module for checking cricket scores/schedules using the CricAPI
@@ -179,6 +178,7 @@ module Afl
   end
 
   def self.get_id(team)
+    bot = Discordrb::Commands::CommandBot.new token: '***REMOVED***', client_id: ***REMOVED***, prefix: '!', help_command: false
        ## Start ZedFish's Code Block
 
     zedteams = {"Adelaide" => ["adelaide", "crows", "ade", "adel"],
