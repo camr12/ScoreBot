@@ -198,14 +198,14 @@ module Afl
 
     newteam = team.downcase
 
-    unless teams.values.flatten.include?(newteam)
+    unless zedteams.values.flatten.include?(newteam)
         bot.send_temporary_message(event.channel.id, content = "#{event.author.mention}: \<:bt:246541254182174720> THAT WAS OUT OF BOUNDS! `#{newteam}` is not an accepted input!", timeout = 10)
         sleep 10
         event.message.delete
         raise ArgumentError.new("THAT WAS OUT OF BOUNDS!")
     end
 
-    teams.each do |key, array|
+    zedteams.each do |key, array|
         if array.include?(newteam)
             team = key
         end
