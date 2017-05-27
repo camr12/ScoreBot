@@ -196,7 +196,7 @@ module Afl
              "West Coast" => ["west coast", "eagles", "wce", "wc", "weagles"],
              "Western Bulldogs" => ["western bulldogs", "bulldogs", "dogs", "wb", "footscray"]} 
 
-    newteam = team.join(" ").downcase
+    newteam = team.downcase
 
     unless teams.values.flatten.include?(newteam)
         bot.send_temporary_message(event.channel.id, content = "#{event.author.mention}: \<:bt:246541254182174720> THAT WAS OUT OF BOUNDS! `#{newteam}` is not an accepted input!", timeout = 10)
