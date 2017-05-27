@@ -216,6 +216,7 @@ module Afl
               "North Melbourne"=>"<:norf:246535714299314187>",
               "Port Adelaide"=>"<:port:246536450399666186>",
               "Sydney"=>"<:swans:246537524422377472>",
+              "Western Bulldogs"=>"<:dogs:246535548766912512>"
               "Richmond"=>"<:tigers:246537629225582592>",
               "Gold Coast"=>"<:suns:246541592612175872>",
               "Fremantle"=>"<:freo:248060573512761346>",
