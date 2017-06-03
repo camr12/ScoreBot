@@ -122,90 +122,37 @@ end
 module Afl
 
 
-  def self.afl_score(team)
 
-    tz = TZInfo::Timezone.get('Australia/Sydney')
-
-    teamnames = {'Carlton' => 'CARL', 'Richmond' => 'RICH', 'Collingwood' => 'COLL', 'Bulldogs' => 'WB', 'St Kilda' => 'STK', 'Melbourne' => 'MEL', 'Sydney' => 'SYD', 'Port Adelaide' => 'PORT', 'Gold Coast Suns' => 'GC', 'Brisbane Lions' => 'BRIS', 'Essendon' => 'ESS', 'Hawthorn' => 'HAW', 'North Melbourne' => 'NMFC', 'West Coast' => 'WCE', 'Adelaide' => 'ADEL', 'GWS' => 'GWS', 'Fremantle' => 'FRE', 'GEEL' => 'Geelong'}
-
-    if teamnames.include?(team)
-      shortteamdirty = teamnames.select{|k,v| k == team}
-      shortteamclean = shortteamdirty[team]
-    end
-
-
-    uri = URI('http://afl.lookoutdata.com/live/feeds/m//widget/1/default/') # fetch json for matchs core
-    matchesdirty = JSON.parse(Net::HTTP.get(uri)) # parse json as hash
-    matchesclean = matchesdirty['c']['matches']
-
-    matchentrydirty = matchesclean.find {|v| v['quickScore']['homeTeamName'] == shortteamclean || v['quickScore']['awayTeamName'] == shortteamclean }
-    matchentryclean = matchentrydirty['quickScore']
-
-    result = {}
-
-    if matchentryclean['homeTeamName'] == shortteamclean
-      id = matchentryclean['matchID']
-    elsif matchentryclean['awayTeamName'] == shortteamclean
-      id = matchentryclean['matchID']
-    end
-
-
-    result[:homeTeamDirty] = matchentryclean['homeTeamName']
-    result[:homeTeam] =  teamnames.select {|_, v| v == result[:homeTeamDirty]}.keys[0]
-
-    result[:awayTeamDirty] = matchentryclean['awayTeamName']
-    result[:awayTeam] = teamnames.select {|_, v| v == result[:awayTeamDirty]}.keys[0]
-
-    result[:homeScore] = matchentryclean['homeScore']
-    result[:awayScore] = matchentryclean['awayScore']
-    result[:venue] = matchentryclean['venueName']
-
-    start_time_dirty = Time.parse(matchentryclean['utcStartTime'])
-    start_time_dirty_converted = tz.utc_to_local(start_time_dirty)
-    start_time_clean = start_time_dirty_converted.strftime('%I:%M %p')
-
-    result[:starttime] = start_time_clean
-
-    start_date_dirty = Time.parse(matchentryclean['utcStartTime'])
-    start_date_dirty_converted = tz.utc_to_local(start_date_dirty)
-    start_date_clean = start_date_dirty_converted.strftime('%b %d, %Y')
-
-    result[:startdate] = start_date_clean
-
-    result[:final] = "#{result[:homeTeam]}: #{result[:homeScore]} - #{result[:awayTeam]}: #{result[:awayScore]}"
-
-
-  end
 
   def self.get_id(team)
     bot = Discordrb::Commands::CommandBot.new token: '***REMOVED***', client_id: ***REMOVED***, prefix: '!', help_command: false
-       ## Start ZedFish's Code Block
+    ## Start ZedFish's Code Block
 
     zedteams = {"Adelaide" => ["adelaide", "crows", "ade", "adel"],
-             "Brisbane" => ["brisbane", "lions", "bl", "bris", "fitzroy"],
-             "Carlton" => ["carlton", "blues", "car", "carl"],
-             "Collingwood" => ["collingwood", "magpies", "pies", "col", "coll"],
-             "Essendon" => ["essendon", "bombers", "ess"],
-             "Fremantle" => ["fremantle", "dockers", "fre", "freo"],
-             "Geelong" => ["geelong", "cats", "gee", "geel"],
-             "Gold Coast" => ["gold coast", "suns", "gc", "gcfc"],
-             "GWS Giants" => ["greater western sydney", "giants", "gws"],
-             "Hawthorn" => ["hawthorn", "hawks", "haw"],
-             "Melbourne" => ["melbourne", "demons", "dees", "mel", "melb"],
-             "North Melbourne" => ["north melbourne", "kangaroos", "roos", "nmfc", "norf", "north"],
-             "Port Adelaide" => ["port adelaide", "power", "port", "pa", "pafc", "pear"],
-             "Richmond" => ["richmond", "tigers", "rich", "tiges", "ninthmond"],
-             "St Kilda" => ["st kilda", "saints", "stk", "street kilda"],
-             "Sydney" => ["sydney", "swans", "syd", "south melbourne", "smfc", "bloods"],
-             "West Coast" => ["west coast", "eagles", "wce", "wc", "weagles"],
-             "Western Bulldogs" => ["western bulldogs", "bulldogs", "dogs", "wb", "footscray"]} 
+                "Brisbane" => ["brisbane", "lions", "bl", "bris", "fitzroy"],
+                "Carlton" => ["carlton", "blues", "car", "carl"],
+                "Collingwood" => ["collingwood", "magpies", "pies", "col", "coll"],
+                "Essendon" => ["essendon", "bombers", "ess"],
+                "Fremantle" => ["fremantle", "dockers", "fre", "freo"],
+                "Geelong" => ["geelong", "cats", "gee", "geel"],
+                "Gold Coast" => ["gold coast", "suns", "gc", "gcfc"],
+                "GWS Giants" => ["greater western sydney", "giants", "gws"],
+                "Hawthorn" => ["hawthorn", "hawks", "haw"],
+                "Melbourne" => ["melbourne", "demons", "dees", "mel", "melb"],
+                "North Melbourne" => ["north melbourne", "kangaroos", "roos", "nmfc", "norf", "north"],
+                "Port Adelaide" => ["port adelaide", "power", "port", "pa", "pafc", "pear"],
+                "Richmond" => ["richmond", "tigers", "rich", "tiges", "ninthmond"],
+                "St Kilda" => ["st kilda", "saints", "stk", "street kilda"],
+                "Sydney" => ["sydney", "swans", "syd", "south melbourne", "smfc", "bloods"],
+                "West Coast" => ["west coast", "eagles", "wce", "wc", "weagles"],
+                "Western Bulldogs" => ["western bulldogs", "bulldogs", "dogs", "wb", "footscray"]}
 
     newteam = team.downcase
 
     zedteams.each do |key, array|
-        if array.include?(newteam)
-            team = key
-        end
+      if array.include?(newteam)
+        team = key
+      end
     end
 
     ## End ZedFish's Code Block
@@ -223,37 +170,97 @@ module Afl
       gameid_i = completed_ordered_no_whitespace.find { |a| a.include? team }.first # find user team
       gameid = gameid_i.to_s # convert back to string
     end
-
-    process_feed(gameid)
-
-
   end
 
-  def self.process_feed(gameid)
+  def self.in_progress_games
+    games = open("http://dtlive.com.au/afl/viewgames.php").read
+    in_progress = games.scan(/GameID=(\d+)">[^>]+>\s+(?:([A-Za-z ]+[^<]+)\s+vs[^>]+>\s*([^>]+)|([^>]+)\s+vs[^>]+>\s*([A-Za-z ]+[^<]+))\s+\(in progress\)</)
+    in_progress.map! { |inner| inner[0] } #get only IDs
+
+    in_progress.each do |gameid|
+      data = {}
+      result = {}
+      feed = open("http://dtlive.com.au/afl/xml/#{gameid}.xml").read
+      feed = Nokogiri::XML(feed)
+      feed.css('Game').each do |node|
+        children = node.children
+        children.each do |item|
+          case item.name
+          when "Location"
+            data[:location] = item.inner_html
+          when "CurrentQuarter"
+            data[:current_qtr] = item.inner_html
+          when "HomeTeam"
+            data[:home_team] = item.inner_html
+          when "HomeTeamShort"
+            data[:home_team_short] = item.inner_html
+          when "AwayTeam"
+            data[:away_team] = item.inner_html
+          when "AwayTeamShort"
+            data[:away_team_short] = item.inner_html
+
+          when "CurrentTime"
+            data[:current_time] = item.inner_html
+          when "PercComplete"
+            data[:perc_complete] = item.inner_html.to_i
+          when "HomeTeamGoal"
+            data[:home_goals] = item.inner_html
+          when "HomeTeamBehind"
+            data[:home_points] = item.inner_html
+          when "AwayTeamGoal"
+            data[:away_goals] = item.inner_html
+          when "AwayTeamBehind"
+            data[:away_points] = item.inner_html
+          end
+        end
+      end
+
+      if data[:home_total].to_i > data[:away_total].to_i
+        data[:margin] = data[:home_total].to_i - data[:away_total].to_i
+        result[:finalmargin] = "*#{data[:home_team_short]} by #{data[:margin]}*"
+      elsif data[:away_total].to_i > data[:home_total].to_i
+        data[:margin] = data[:away_total].to_i - data[:home_total].to_i
+        result[:finalmargin] = "*#{data[:away_team_short]} by #{data[:margin]}*"
+      elsif data[:away_total].to_i == data[:home_total].to_i
+        data[:margin] = "0"
+        result[:final3] = "Scores level."
+      elsif data[:home_total].to_i == data[:away_total].to_i
+        data[:margin] = "0"
+        result[:finalmargin] = "Scores level."
+      end
+
+    end
+  end
+  def self.process_feed(team)
+    gameid = get_id(team)
     data = {}
     result = {}
     feed = open("http://dtlive.com.au/afl/xml/#{gameid}.xml").read
     feed = Nokogiri::XML(feed)
 
+  
+    data[:home_total] = data[:home_goals].to_i * 6 + data[:home_points].to_i
+    data[:away_total] = data[:away_goals].to_i * 6 + data[:away_points].to_i
+
     teams = {"Adelaide"=>"<:crows:240102697196453888>",
-              "Brisbane"=>"<:lions:240107932836954115>",
-              "Carlton"=>"<:blues:240110286705524737>",
-              "Collingwood"=>"<:pies:240111431226359809>",
-              "Essendon"=>"<:dons:240112429344751616>",
-              "Geelong"=>"<:cats:240116808634335234>",
-              "GWS Giants"=>"<:gws:240123319104438273>",
-              "Hawthorn"=>"<:hawks:246532872217952266>",
-              "Melbourne"=>"<:dees:246534269931880449>",
-              "St Kilda"=>"<:saints:246535544106909697>",
-              "Bulldogs"=>"<:dogs:246535548766912512>",
-              "North Melbourne"=>"<:norf:246535714299314187>",
-              "Port Adelaide"=>"<:port:246536450399666186>",
-              "Sydney"=>"<:swans:246537524422377472>",
-              "Western Bulldogs"=>"<:dogs:246535548766912512>",
-              "Richmond"=>"<:tigers:246537629225582592>",
-              "Gold Coast"=>"<:suns:246541592612175872>",
-              "Fremantle"=>"<:freo:248060573512761346>",
-              "West Coast"=>"<:eagles:297781448507785216>"}
+             "Brisbane"=>"<:lions:240107932836954115>",
+             "Carlton"=>"<:blues:240110286705524737>",
+             "Collingwood"=>"<:pies:240111431226359809>",
+             "Essendon"=>"<:dons:240112429344751616>",
+             "Geelong"=>"<:cats:240116808634335234>",
+             "GWS Giants"=>"<:gws:240123319104438273>",
+             "Hawthorn"=>"<:hawks:246532872217952266>",
+             "Melbourne"=>"<:dees:246534269931880449>",
+             "St Kilda"=>"<:saints:246535544106909697>",
+             "Bulldogs"=>"<:dogs:246535548766912512>",
+             "North Melbourne"=>"<:norf:246535714299314187>",
+             "Port Adelaide"=>"<:port:246536450399666186>",
+             "Sydney"=>"<:swans:246537524422377472>",
+             "Western Bulldogs"=>"<:dogs:246535548766912512>",
+             "Richmond"=>"<:tigers:246537629225582592>",
+             "Gold Coast"=>"<:suns:246541592612175872>",
+             "Fremantle"=>"<:freo:248060573512761346>",
+             "West Coast"=>"<:eagles:297781448507785216>"}
 
     feed.css('Game').each do |node|
       children = node.children
