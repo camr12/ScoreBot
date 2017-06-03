@@ -13,21 +13,6 @@ require 'discordrb'
 
 # Module for checking cricket scores/schedules using the CricAPI
 module Cric
-  #  def self.gmt(time = nil) # don't use local_to_utc - doesn't make sense
-  #    tz = TZInfo::Timezone.get('Australia/Sydney')
-  #    time += ' UTC'
-  #    time = Time.parse(time)
-  #    time = tz.local_to_utc(time)
-  #    tz.strftime('%Y-%m-%d %H:%M:%S %Z', time)
-  #  end
-
-  #def self.gmt(t = nil) # convert GMT time to Sydney time (AEDT/AEST)
-  #  t2 = tz.utc_to_local(t1)
-  #  #t2 = t1 + t1.utc_offset # parse gmt_offset to local Sydney time
-  #  t3 = t2.strftime("%F %T") # remove redundant gmt_offset
-  #  t4 = t3.strftime("%I:%M %p") # convert to "hour:second PM/AM"
-  #end
-
   def self.gmttime(tstr) # convert GMT time to timezone defined by tz variable
     tz = TZInfo::Timezone.get('Australia/Sydney') # timezone to convert to
     time = Time.parse(tstr) # parse time
@@ -120,9 +105,6 @@ end
 
 # Module for checking live AFL scores and past games
 module Afl
-
-
-
 
   def self.get_id(team)
     bot = Discordrb::Commands::CommandBot.new token: '***REMOVED***', client_id: ***REMOVED***, prefix: '!', help_command: false
@@ -243,8 +225,8 @@ module Afl
       gametracker << data
     end
     return_results = []
-    gametracker.each do |gametracker|
-      result = "**#{gametracker[:home_team]}** vs **#{gametracker[:away_team]}** at #{gametracker[:location]} - Q#{gametracker[:current_qtr]} - #{teams[gametracker[:home_team]]} #{gametracker[:home_goals]}.#{gametracker[:home_points]}.#{gametracker[:home_total]} - #{teams[gametracker[:away_team]]} #{gametracker[:away_goals]}.#{gametracker[:away_points]}.#{gametracker[:away_total]}"
+    gametracker.each do |gamehash|
+      result = "**#{gamehash[:home_team]}** vs **#{gamehash[:away_team]}** at #{gamehash[:location]} - Q#{gamehash[:current_qtr]} - #{teams[gamehash[:home_team]]} #{gamehash[:home_goals]}.#{gamehash[:home_points]}.#{gamehash[:home_total]} - #{teams[gamehash[:away_team]]} #{gamehash[:away_goals]}.#{gamehash[:away_points]}.#{gamehash[:away_total]}"
       puts results
       return_results << results
     end
