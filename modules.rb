@@ -154,37 +154,37 @@ module Afl
     end
   end
 
- def self.in_progress_games
+  def self.in_progress_games
     games = open("http://dtlive.com.au/afl/viewgames.php").read
     in_progress = games.scan(/GameID=(\d+)">[^>]+>\s+(?:([A-Za-z ]+[^<]+)\s+vs[^>]+>\s*([^>]+)|([^>]+)\s+vs[^>]+>\s*([A-Za-z ]+[^<]+))\s+\(in progress\)</)
-   in_progress.map! { |inner| inner[0] } #get only IDs
-   gametracker = []
-   numerical = 0
-   teams = {"Adelaide"=>"<:crows:240102697196453888>",
-            "Brisbane"=>"<:lions:240107932836954115>",
-            "Carlton"=>"<:blues:240110286705524737>",
-            "Collingwood"=>"<:pies:240111431226359809>",
-            "Essendon"=>"<:dons:240112429344751616>",
-            "Geelong"=>"<:cats:240116808634335234>",
-            "GWS Giants"=>"<:gws:240123319104438273>",
-            "Hawthorn"=>"<:hawks:246532872217952266>",
-            "Melbourne"=>"<:dees:246534269931880449>",
-            "St Kilda"=>"<:saints:246535544106909697>",
-            "Bulldogs"=>"<:dogs:246535548766912512>",
-            "North Melbourne"=>"<:norf:246535714299314187>",
-            "Port Adelaide"=>"<:port:246536450399666186>",
-            "Sydney"=>"<:swans:246537524422377472>",
-            "Western Bulldogs"=>"<:dogs:246535548766912512>",
-            "Richmond"=>"<:tigers:246537629225582592>",
-            "Gold Coast"=>"<:suns:246541592612175872>",
-            "Fremantle"=>"<:freo:248060573512761346>",
-            "West Coast"=>"<:eagles:297781448507785216>"}
- 
-   in_progress.each do |gameid|
-     numerical += 1
-     data = {:id => gameid}
-     data[:number] = numerical
-     feed = open("http://dtlive.com.au/afl/xml/#{gameid}.xml").read
+    in_progress.map! { |inner| inner[0] } #get only IDs
+    gametracker = []
+    numerical = 0
+    teams = {"Adelaide"=>"<:crows:240102697196453888>",
+             "Brisbane"=>"<:lions:240107932836954115>",
+             "Carlton"=>"<:blues:240110286705524737>",
+             "Collingwood"=>"<:pies:240111431226359809>",
+             "Essendon"=>"<:dons:240112429344751616>",
+             "Geelong"=>"<:cats:240116808634335234>",
+             "GWS Giants"=>"<:gws:240123319104438273>",
+             "Hawthorn"=>"<:hawks:246532872217952266>",
+             "Melbourne"=>"<:dees:246534269931880449>",
+             "St Kilda"=>"<:saints:246535544106909697>",
+             "Bulldogs"=>"<:dogs:246535548766912512>",
+             "North Melbourne"=>"<:norf:246535714299314187>",
+             "Port Adelaide"=>"<:port:246536450399666186>",
+             "Sydney"=>"<:swans:246537524422377472>",
+             "Western Bulldogs"=>"<:dogs:246535548766912512>",
+             "Richmond"=>"<:tigers:246537629225582592>",
+             "Gold Coast"=>"<:suns:246541592612175872>",
+             "Fremantle"=>"<:freo:248060573512761346>",
+             "West Coast"=>"<:eagles:297781448507785216>"}
+
+    in_progress.each do |gameid|
+      numerical += 1
+      data = {:id => gameid}
+      data[:number] = numerical
+      feed = open("http://dtlive.com.au/afl/xml/#{gameid}.xml").read
       feed = Nokogiri::XML(feed)
       feed.css('Game').each do |node|
         children = node.children
@@ -202,7 +202,7 @@ module Afl
             data[:away_team] = item.inner_html
           when "AwayTeamShort"
             data[:away_team_short] = item.inner_html
- 
+
           when "CurrentTime"
             data[:current_time] = item.inner_html
           when "PercComplete"
@@ -218,19 +218,17 @@ module Afl
           end
         end
       end
- 
+
       data[:home_total] = data[:home_goals].to_i * 6 + data[:home_points].to_i
       data[:away_total] = data[:away_goals].to_i * 6 + data[:away_points].to_i
- 
+
       gametracker << data
     end
     return_results = []
     gametracker.each do |gamehash|
       result = "**#{gamehash[:home_team]}** vs **#{gamehash[:away_team]}** at #{gamehash[:location]} - Q#{gamehash[:current_qtr]} - #{teams[gamehash[:home_team]]} #{gamehash[:home_goals]}.#{gamehash[:home_points]}.#{gamehash[:home_total]} - #{teams[gamehash[:away_team]]} #{gamehash[:away_goals]}.#{gamehash[:away_points]}.#{gamehash[:away_total]}"
-      puts results
       return_results << results
     end
-    puts return_results
     return return_results
   end
   def self.process_feed(team)
