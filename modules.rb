@@ -225,7 +225,7 @@ module Afl
 
       gametracker << data
     end
-    return_results = ""
+    return_results = "" # if it's a string that we append to, hopefully we can push it straight into SB's messages to the channel
     gametracker.each do |gamehash|
       result = "**#{gamehash[:home_team]}** vs **#{gamehash[:away_team]}** at #{gamehash[:location]} - Q#{gamehash[:current_qtr]} - #{teams[gamehash[:home_team]]} #{gamehash[:home_goals]}.#{gamehash[:home_points]}.#{gamehash[:home_total]} - #{teams[gamehash[:away_team]]} #{gamehash[:away_goals]}.#{gamehash[:away_points]}.#{gamehash[:away_total]}\n"
       return_results << result
