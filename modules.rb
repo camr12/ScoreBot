@@ -156,9 +156,8 @@ module Afl
 
   def self.in_progress_games
     games = open("http://dtlive.com.au/afl/viewgames.php").read
-    #in_progress = games.scan(/GameID=(\d+)">[^>]+>\s+(?:([A-Za-z ]+[^<]+)\s+vs[^>]+>\s*([^>]+)|([^>]+)\s+vs[^>]+>\s*([A-Za-z ]+[^<]+))\s+\(in progress\)</)
-    #in_progress.map! { |inner| inner[0] } #get only IDs
-    in_progress = ["1222","1223"]
+    in_progress = games.scan(/GameID=(\d+)">[^>]+>\s+(?:([A-Za-z ]+[^<]+)\s+vs[^>]+>\s*([^>]+)|([^>]+)\s+vs[^>]+>\s*([A-Za-z ]+[^<]+))\s+\(in progress\)</)
+    in_progress.map! { |inner| inner[0] } #get only IDs
     gametracker = []
     numerical = 0
     teams = {"Adelaide"=>"<:crows:240102697196453888>",
@@ -225,13 +224,13 @@ module Afl
 
       gametracker << data
     end
-    return_results = "" # if it's a string that we append to, hopefully we can push it straight into SB's messages to the channel
-    gametracker.each do |gamehash|
-      result = "**#{gamehash[:home_team]}** vs **#{gamehash[:away_team]}** at #{gamehash[:location]} - Q#{gamehash[:current_qtr]} - #{teams[gamehash[:home_team]]} #{gamehash[:home_goals]}.#{gamehash[:home_points]}.#{gamehash[:home_total]} - #{teams[gamehash[:away_team]]} #{gamehash[:away_goals]}.#{gamehash[:away_points]}.#{gamehash[:away_total]}\n"
-      return_results << result
-      return return_results.join
+
+    result = ""
+   gametracker.each do |gamehash| # For each
+      result += "**#{gamehash[:home_team]}** vs **#{gamehash[:away_team]}** at #{gamehash[:location]} - Q#{gamehash[:current_qtr]} - #{teams[gamehash[:home_team]]} #{gamehash[:home_goals]}.#{gamehash[:home_points]}.#{gamehash[:home_total]} - #{teams[gamehash[:away_team]]} #{gamehash[:away_goals]}.#{gamehash[:away_points]}.#{gamehash[:away_total]}\n"
     end
-    return return_results
+    puts result
+    return result
   end
   def self.process_feed(team)
     gameid = get_id(team)
