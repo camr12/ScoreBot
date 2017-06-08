@@ -35,7 +35,7 @@ module Cric
     JSON.parse(Net::HTTP.get(uri)) # parse score list as hash
   end
 
-  def self.cricket_score(team) # Dont set team=nil, its not optional
+  def self.cricket_score(team)
     id = fetch_matchescric.find { |h| h.key(team) }['unique_id']
 
     score = fetch_scorecric(id)
@@ -94,7 +94,7 @@ module Cric
     end
   end
 
-  def self.runrate(score) # again, no nil - this isnt optional
+  def self.runrate(score)
     overs = /\(([0-9]+)\.([0-9]+)?/.match(score)[1]
     runs = match_groups = /(\d+)\/(\d+)/.match(score)[1]
     balls = /\(([0-9]+)\.([0-9]+)?/.match(score)[2]
@@ -106,7 +106,7 @@ end
 # Module for checking live AFL scores and past games
 module Afl
 
-  def self.get_id(team)
+  def self.get_id(team) # Get the match ID for a team.
     bot = Discordrb::Commands::CommandBot.new token: '***REMOVED***', client_id: ***REMOVED***, prefix: '!', help_command: false
     ## Start ZedFish's Code Block
 
@@ -154,7 +154,7 @@ module Afl
     end
   end
 
-  def self.in_progress_games
+  def self.in_progress_games # Get all in progress games, print on newlines
     games = open("http://dtlive.com.au/afl/viewgames.php").read
     in_progress = games.scan(/GameID=(\d+)">[^>]+>\s+(?:([A-Za-z ]+[^<]+)\s+vs[^>]+>\s*([^>]+)|([^>]+)\s+vs[^>]+>\s*([A-Za-z ]+[^<]+))\s+\(in progress\)</)
     in_progress.map! { |inner| inner[0] } #get only IDs
@@ -232,7 +232,8 @@ module Afl
     puts result
     return result
   end
-  def self.process_feed(team)
+
+  def self.process_feed(team) # Process a feed into hashes given a team.
     gameid = get_id(team)
     data = {}
     result = {}
