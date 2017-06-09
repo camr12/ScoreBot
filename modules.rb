@@ -222,25 +222,26 @@ module Afl
       data[:home_total] = data[:home_goals].to_i * 6 + data[:home_points].to_i
       data[:away_total] = data[:away_goals].to_i * 6 + data[:away_points].to_i
 
-      if data[:home_total].to_i > data[:away_total].to_i
-        data[:margin] = data[:home_total].to_i - data[:away_total].to_i
-        result[:finalmargin] = "*#{data[:home_team_short]} by #{data[:margin]}*"
-      elsif data[:away_total].to_i > data[:home_total].to_i
-        data[:margin] = data[:away_total].to_i - data[:home_total].to_i
-        result[:finalmargin] = "*#{data[:away_team_short]} by #{data[:margin]}*"
-      elsif data[:away_total].to_i == data[:home_total].to_i
-        data[:margin] = "0"
-        result[:finalmargin] = "Scores level."
-      elsif data[:home_total].to_i == data[:away_total].to_i
-        data[:margin] = "0"
-        result[:finalmargin] = "Scores level."
-      end
-
       gametracker << data
     end
 
     result = ""
     gametracker.each do |gamehash| # For each
+
+      if gamehash[:home_total].to_i > gamehash[:away_total].to_i
+        gamehash[:margin] = gamehash[:home_total].to_i - gamehash[:away_total].to_i
+        gamehash[:finalmargin] = "*#{gamehash[:home_team_short]} by #{gamehash[:margin]}*"
+      elsif gamehash[:away_total].to_i > gamehash[:home_total].to_i
+        gamehash[:margin] = gamehash[:away_total].to_i - gamehash[:home_total].to_i
+        gamehash[:finalmargin] = "*#{gamehash[:away_team_short]} by #{gamehash[:margin]}*"
+      elsif gamehash[:away_total].to_i == gamehash[:home_total].to_i
+        gamehash[:margin] = "0"
+        result[:finalmargin] = "Scores level."
+      elsif gamehash[:home_total].to_i == gamehash[:away_total].to_i
+        gamehash[:margin] = "0"
+        result[:finalmargin] = "Scores level."
+      end
+
       result += "**#{gamehash[:home_team]}** vs **#{gamehash[:away_team]}** at #{gamehash[:location]} - Q#{gamehash[:current_qtr]} - #{teams[gamehash[:home_team]]} #{gamehash[:home_goals]}.#{gamehash[:home_points]}.#{gamehash[:home_total]} - #{teams[gamehash[:away_team]]} #{gamehash[:away_goals]}.#{gamehash[:away_points]}.#{gamehash[:away_total]} - #{gamehash[:finalmargin]}\n"
     end
     puts result
