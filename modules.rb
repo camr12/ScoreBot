@@ -110,7 +110,7 @@ module Afl
     bot = Discordrb::Commands::CommandBot.new token: '***REMOVED***', client_id: ***REMOVED***, prefix: '!', help_command: false
     ## Start ZedFish's Code Block
 
-    zedteams = {"Adelaide" => ["adelaide", "crows", "ade", "adel"],
+    zedteams = {"Adelaide" => ["adelaide", "crows", "ade", "adel"], # Update for main.rb as well!
                 "Brisbane" => ["brisbane", "lions", "bl", "bris", "fitzroy"],
                 "Carlton" => ["carlton", "blues", "car", "carl"],
                 "Collingwood" => ["collingwood", "magpies", "pies", "col", "coll"],

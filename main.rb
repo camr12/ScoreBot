@@ -34,28 +34,28 @@ end
 #  event.respond "#{score}"
 #end
 bot.command(:now) do |event|
-result = Afl.in_progress_games
+result = Afl.in_progress_games  
 event.respond "#{result}"
 end
 bot.command(:afl) do |event, *team|
-  zedteams = {"Adelaide" => ["adelaide", "crows", "ade", "adel"],
-              "Brisbane" => ["brisbane", "lions", "bl", "bris", "fitzroy"],
-              "Carlton" => ["carlton", "blues", "car", "carl"],
-              "Collingwood" => ["collingwood", "magpies", "pies", "col", "coll"],
-              "Essendon" => ["essendon", "bombers", "ess"],
-              "Fremantle" => ["fremantle", "dockers", "fre", "freo"],
-              "Geelong" => ["geelong", "cats", "gee", "geel"],
-              "Gold Coast" => ["gold coast", "suns", "gc", "gcfc", "gcs"],
-              "GWS Giants" => ["greater western sydney", "giants", "gws"],
-              "Hawthorn" => ["hawthorn", "hawks", "haw"],
-              "Melbourne" => ["melbourne", "demons", "dees", "mel", "melb"],
-              "North Melbourne" => ["north melbourne", "kangaroos", "roos", "nmfc", "norf", "north"],
-              "Port Adelaide" => ["port adelaide", "power", "port", "pa", "pafc", "pear"],
-              "Richmond" => ["richmond", "tigers", "rich", "tiges", "ninthmond"],
-              "St Kilda" => ["st kilda", "saints", "stk", "street kilda"],
-              "Sydney" => ["sydney", "swans", "syd", "south melbourne", "smfc", "bloods"],
-              "West Coast" => ["west coast", "eagles", "wce", "wc", "weagles"],
-              "Western Bulldogs" => ["western bulldogs", "bulldogs", "dogs", "wb", "footscray"]}
+   zedteams = {"Adelaide" => ["adelaide", "crows", "ade", "adel"], # Update for modules.rb as well!
+                "Brisbane" => ["brisbane", "lions", "bl", "bris", "fitzroy"],
+                "Carlton" => ["carlton", "blues", "car", "carl"],
+                "Collingwood" => ["collingwood", "magpies", "pies", "col", "coll"],
+                "Essendon" => ["essendon", "bombers", "ess"],
+                "Fremantle" => ["fremantle", "dockers", "fre", "freo"],
+                "Geelong" => ["geelong", "cats", "gee", "geel"],
+                "Gold Coast" => ["gold coast", "suns", "gc", "gcfc"],
+                "GWS Giants" => ["greater western sydney", "giants", "gws"],
+                "Hawthorn" => ["hawthorn", "hawks", "haw", "hawtron"],
+                "Melbourne" => ["melbourne", "demons", "dees", "mel", "melb"],
+                "North Melbourne" => ["north melbourne", "kangaroos", "roos", "nmfc", "norf", "north"],
+                "Port Adelaide" => ["port adelaide", "power", "port", "pa", "pafc", "pear"],
+                "Richmond" => ["richmond", "tigers", "rich", "tiges", "ninthmond"],
+                "St Kilda" => ["st kilda", "saints", "stk", "street kilda", "satin kilda"],
+                "Sydney" => ["sydney", "swans", "syd", "south melbourne", "smfc", "bloods"],
+                "West Coast" => ["west coast", "eagles", "wce", "wc", "weagles"],
+                "Western Bulldogs" => ["western bulldogs", "bulldogs", "dogs", "wb", "footscray"]}
   newteam = team.join(" ").downcase
   unless zedteams.values.flatten.include?(newteam)
     bot.send_temporary_message(event.channel.id, content = "#{event.author.mention}: \<:bt:246541254182174720> THAT WAS OUT OF BOUNDS! `#{newteam}` is not an accepted input!", timeout = 10)
