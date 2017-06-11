@@ -320,7 +320,7 @@ module Afl
 
     #result[:final] = "#{result[:final1]} \n#{result[:final2]} \n#{result[:final3]}"
 
-    result[:final1] = "**#{data[:home_team]}** vs **#{data[:away_team]}** at #{data[:location]} - #{data[:perc_complete] == 100 ? "Game finished" : "Game time: #{data[:current_time]} in Q#{data[:current_qtr]}"}"
+    result[:final1] = "**#{data[:home_team]}** vs **#{data[:away_team]}** at #{data[:location]} - #{data[:perc_complete] == 100 ? "Game finished" : data[:perc_complete] == 25 ? "End of Q#{data[:current_qtr]}" : data[:perc_complete] == 50 ? "End of Q#{data[:current_qtr]}" : data[:perc_complete] == 75 ? "End of Q#{data[:current_qtr]}" : "Game time: #{data[:current_time]} in Q#{data[:current_qtr]}"}"
 
     result[:final2] = "#{teams[data[:home_team]]} #{data[:home_goals]}.#{data[:home_points]}.#{data[:home_total]} - #{teams[data[:away_team]]} #{data[:away_goals]}.#{data[:away_points]}.#{data[:away_total]}"
 
