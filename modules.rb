@@ -8,30 +8,41 @@ require 'net/http'
 require 'nokogiri'
 require 'open-uri'
 require 'discordrb'
+require 'yaml'
 
-
+$secure = YAML.load_file('secure.yaml')
 
 # Module for checking cricket scores/schedules using the CricAPI
 module Cric
-  def self.gmttime(tstr) # convert GMT time to timezone defined by tz variable
-    tz = TZInfo::Timezone.get('Australia/Sydney') # timezone to convert to
-    time = Time.parse(tstr) # parse time
-    tz.utc_to_local(time).strftime("%I:%M %p") # convert to "hour:second AM/PM" and timezone
+  $cric_api_key = $secure["cric_api_key"]
+  # convert GMT time to timezone defined by tz variable
+  def self.gmttime(tstr)
+    # timezone to convert to
+    tz = TZInfo::Timezone.get('Australia/Sydney')
+    # parse time
+    time = Time.parse(tstr)
+    # convert to "hour:second AM/PM" and timezone
+    tz.utc_to_local(time).strftime("%I:%M %p")
   end
 
   def self.gmtdate(tstr)
-    tz = TZInfo::Timezone.get('Australia/Sydney') # timezone to convert to
-    time = Time.parse(tstr) # parse time
-    tz.utc_to_local(time).strftime("%B %d, %Y") # convert to "hour:second AM/PM" and timezone
+    # timezone to convert to
+    tz = TZInfo::Timezone.get('Australia/Sydney')
+    # parse time
+    time = Time.parse(tstr)
+    # convert to "hour:second AM/PM" and timezone
+    tz.utc_to_local(time).strftime("%B %d, %Y")
   end
 
   def self.fetch_matchescric
-    uri = URI('http://cricapi.com/api/matches/?apikey=1iHvVPXRR5RHEArkjQlIntupKkb2') # fetch json for match list
-    JSON.parse(Net::HTTP.get(uri))['matches'] # parse match list as hash
+    # fetch json for match list
+    uri = URI("http://cricapi.com/api/matches/?apikey=#{$cric_api_key}")
+    # parse match list as hash
+    JSON.parse(Net::HTTP.get(uri))['matches']
   end
 
   def self.fetch_scorecric(id)
-    uri = URI("http://cricapi.com/api/cricketScore?apikey=1iHvVPXRR5RHEArkjQlIntupKkb2&unique_id=#{id}") # fetch json for matchs core
+    uri = URI("http://cricapi.com/api/cricketScore?apikey=#{$cric_api_key}&unique_id=#{id}") # fetch json for matchs core
     JSON.parse(Net::HTTP.get(uri)) # parse score list as hash
   end
 
@@ -105,9 +116,11 @@ end
 
 # Module for checking live AFL scores and past games
 module Afl
-
+  
+  $token = $secure["token"]
+  $client_id = $secure["client_id"]
   def self.get_id(team) # Get the match ID for a team.
-    bot = Discordrb::Commands::CommandBot.new token: '***REMOVED***', client_id: ***REMOVED***, prefix: '!', help_command: false
+    bot = Discordrb::Commands::CommandBot.new token: $token, client_id: $client_id, prefix: '!', help_command: false
     ## Start ZedFish's Code Block
 
     zedteams = {"Adelaide" => ["adelaide", "crows", "ade", "adel"], # Update for main.rb as well!
