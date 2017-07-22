@@ -7,7 +7,7 @@ begin
   image.save('live.png')
   currenttime = Time.now.strftime("%d/%m/%Y %H:%M:%-S")
   puts "Saved live ladder at #{currenttime}"
-rescue Ghastly::FetchError => e
+rescue Gastly::FetchError => e
   puts "Got an exception, restarting."
 end
 
@@ -18,7 +18,7 @@ while true
     image.save('live.png')
     currenttime = Time.now.strftime("%d/%m/%Y %H:%M:%-S")
     puts "Saved live ladder at #{currenttime}"
-  rescue Ghastly::FetchError => e
+  rescue Gastly::FetchError => e
     puts "Got an exception, restarting."
   end
 end
