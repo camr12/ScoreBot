@@ -370,13 +370,13 @@ module Stats
     in_progress_game = in_progress.find { |array| array.include? team}
     completed_game = completed.find { |array| array.include? team}
     result_hash = {}
-
+    
     if in_progress_game != nil # If the team is playing
       result_hash[:gameid] = in_progress_game[0]
       result_hash[:home_team] = in_progress_game[1] # Hometeam is always first
       result_hash[:away_team] = in_progress_game[2]
       return result_hash # Return the current game id
-    else # If the team isn't playing
+    elsif in_progress_game == nil # If the team isn't playing
       result_hash[:gameid] = completed_game[0]
       result_hash[:home_team] = completed_game[1] # Hometeam is always first
       result_hash[:away_team] = completed_game[2]

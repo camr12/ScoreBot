@@ -98,8 +98,9 @@ bot.command(:liveladder, bucket: :afl) do |event|
 end
 
 bot.command(:topten) do |event, *team|
-  newteam = team.join(" ").downcase
-  event.respond Stats.get_top_ten(Stats.get_gameid(newteam)[:gameid])
+  team = team.join(" ").downcase # make downcase
+  team = team.split(/ |\_|\-/).map(&:capitalize).join(" ") # make sentence case
+  event.respond Stats.get_top_ten(Stats.get_gameid(team)[:gameid])
 end
 
 bot.run
