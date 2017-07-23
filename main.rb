@@ -97,4 +97,9 @@ bot.command(:liveladder, bucket: :afl) do |event|
   event.channel.send_file(file)
 end
 
+bot.command(:topten) do |event, *team|
+  newteam = team.join(" ").downcase
+  event.respond Process.get_top_ten(get_gameid(newteam)[:gameid])
+end
+
 bot.run
