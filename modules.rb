@@ -11,6 +11,7 @@ require 'discordrb'
 require 'yaml'
 
 $secure = YAML.load_file('secure.yaml')
+$emotes = YAML.load_file("emotes.yml")
 
 # Module for checking cricket scores/schedules using the CricAPI
 module Cric
@@ -116,7 +117,7 @@ end
 
 # Module for checking live AFL scores and past games
 module Afl
-  
+
   $token = $secure["token"]
   $client_id = $secure["client_id"]
   def self.get_id(team) # Get the match ID for a team.
@@ -353,4 +354,102 @@ module Afl
 
     result[:final] = "#{result[:final1]} \n#{result[:final2]} \n#{result[:final3]}"
   end
+end
+
+module Stats
+  def self.get_gameid(team)
+    # Returns hash of:
+    # :gameid
+    # :home_team
+    # :away_team
+
+    games = open("http://dtlive.com.au:80/afl/viewgames.php").read
+    in_progress = games.scan(/GameID=(\d+)">[^>]+>\s+(?:([A-Za-z ]+[^<]+)\s+vs[^>]+>\s*([^>]+)|([^>]+)\s+vs[^>]+>\s*([A-Za-z ]+[^<]+))\s+\(in progress\)</)
+    completed = games.scan(/GameID=(\d+)">[^>]+>\s+(?:([A-Za-z ]+[^<]+)\s+vs[^>]+>\s*([^>]+)|([^>]+)\s+vs[^>]+>\s*([A-Za-z ]+[^<]+))<small>\(completed\)<\/small></)
+
+    in_progress_game = in_progress.find { |array| array.include? team}
+    completed_game = completed.find { |array| array.include? team}
+    result_hash = {}
+
+    if in_progress_game != nil # If the team is playing
+      result_hash[:gameid] = in_progress_game[0]
+      result_hash[:home_team] = in_progress_game[1] # Hometeam is always first
+      result_hash[:away_team] = in_progress_game[2]
+      return result_hash # Return the current game id
+    else # If the team isn't playing
+      result_hash[:gameid] = completed_game[0]
+      result_hash[:home_team] = completed_game[1] # Hometeam is always first
+      result_hash[:away_team] = completed_game[2]
+      return result_hash # Return most recent game ID (probably)
+    end
+
+  end # End of get_gameid
+
+
+  def self.get_stats(gameid)
+
+    feed = open("http://dtlive.com.au/afl/xml/#{gameid}.xml").read
+    feed = Nokogiri::XML(feed)
+    home_stats = feed.css('Home')
+    away_stats = feed.css('Away')
+    stats = []
+    home_stats.css("Player").each do |player|
+      playerstats = { :id => "#{player.css("PlayerID").inner_html}".to_i,
+      :name => "#{player.css("Name").inner_html}",
+      :team => "#{feed.css("Game").css("HomeTeam").inner_html}",
+      :number => "#{player.css("JumperNumber").inner_html}".to_i,
+      :possessions => "#{player.css("Kick").inner_html}".to_i + "#{player.css("Handball").inner_html}".to_i,
+      :kicks => "#{player.css("Kick").inner_html}".to_i,
+      :handballs => "#{player.css("Handball").inner_html}".to_i,
+      :marks => "#{player.css("Mark").inner_html}".to_i,
+      :tackles => "#{player.css("Tackle").inner_html}".to_i,
+      :freesfor => "#{player.css("FreeFor").inner_html}".to_i,
+      :freesagainst => "#{player.css("FreeAgainst").inner_html}".to_i,
+      :goals => "#{player.css("Goal").inner_html}".to_i,
+      :behinds => "#{player.css("Behind").inner_html}".to_i,
+      :score => 6 * "#{player.css("Goal").inner_html}".to_i + "#{player.css("Behind").inner_html}".to_i,
+      :togperc => "#{player.css("TOGPerc").inner_html}".to_i,
+      :dt => "#{player.css("DT").inner_html}".to_i }
+      stats << playerstats
+    end
+    away_stats.css("Player").each do |player|
+      playerstats = { :id => "#{player.css("PlayerID").inner_html}".to_i,
+      :name => "#{player.css("Name").inner_html}",
+      :team => "#{feed.css("Game").css("AwayTeam").inner_html}",
+      :number => "#{player.css("JumperNumber").inner_html}".to_i,
+      :possessions => "#{player.css("Kick").inner_html}".to_i + "#{player.css("Handball").inner_html}".to_i,
+      :kicks => "#{player.css("Kick").inner_html}".to_i,
+      :handballs => "#{player.css("Handball").inner_html}".to_i,
+      :marks => "#{player.css("Mark").inner_html}".to_i,
+      :tackles => "#{player.css("Tackle").inner_html}".to_i,
+      :freesfor => "#{player.css("FreeFor").inner_html}".to_i,
+      :freesagainst => "#{player.css("FreeAgainst").inner_html}".to_i,
+      :goals => "#{player.css("Goal").inner_html}".to_i,
+      :behinds => "#{player.css("Behind").inner_html}".to_i,
+      :score => 6 * "#{player.css("Goal").inner_html}".to_i + "#{player.css("Behind").inner_html}".to_i,
+      :togperc => "#{player.css("TOGPerc").inner_html}".to_i,
+      :dt => "#{player.css("DT").inner_html}".to_i }
+      stats << playerstats
+    end
+
+    return stats
+
+  end # End of get_stats
+
+  def self.get_top_ten(gameid)
+
+    top_ten = get_stats(gameid).sort_by { |player| player[:dt] }.reverse!.slice(0,10)
+
+    top_ten_msg = "Top players of the game: \n"
+
+    top_ten.each do |player|
+      rank = top_ten.index(player).to_i + 1
+      msg_line = "#{rank}: (#{$emotes[player[:team]]} ##{player[:number]}) #{player[:name]} | #{player[:dt]} DT Points | #{player[:possessions]} Possessions | Score (g.b.t): #{player[:goals]}.#{player[:behinds]}.#{player[:score]}\n"
+      top_ten_msg << msg_line
+    end
+
+    return top_ten_msg
+
+  end # End of get_top_ten
+
 end
