@@ -99,7 +99,7 @@ end
 
 bot.command(:topten) do |event, *team|
   newteam = team.join(" ").downcase
-  event.respond Process.get_top_ten(Process.get_gameid(newteam)[:gameid])
+  event.respond Stats.get_top_ten(Stats.get_gameid(newteam)[:gameid])
 end
 
 bot.run
