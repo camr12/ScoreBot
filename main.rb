@@ -43,7 +43,7 @@ event.respond "#{result}"
 end
 bot.command(:afl) do |event, *team|
    zedteams = {"Adelaide" => ["adelaide", "crows", "ade", "adel"],
-                "Brisbane" => ["brisbane", "lions", "bl", "bris", "fitzroy"],
+                "Brisbane" => ["brisbane", "lions", "bl", "bris", "fitzroy", "bears"],
                 "Carlton" => ["carlton", "blues", "car", "carl"],
                 "Collingwood" => ["collingwood", "magpies", "pies", "col",
                                                                     "coll"],
