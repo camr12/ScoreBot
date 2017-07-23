@@ -124,7 +124,7 @@ module Afl
     ## Start ZedFish's Code Block
 
     zedteams = {"Adelaide" => ["adelaide", "crows", "ade", "adel"], # Update for main.rb as well!
-                "Brisbane" => ["brisbane", "lions", "bl", "bris", "fitzroy"],
+                "Brisbane" => ["brisbane", "lions", "bl", "bris", "fitzroy", "bears"],
                 "Carlton" => ["carlton", "blues", "car", "carl"],
                 "Collingwood" => ["collingwood", "magpies", "pies", "col", "coll"],
                 "Essendon" => ["essendon", "bombers", "ess"],
