@@ -128,7 +128,7 @@ module Afl
                 "Brisbane" => ["brisbane", "lions", "bl", "bris", "fitzroy", "bears"],
                 "Carlton" => ["carlton", "blues", "car", "carl"],
                 "Collingwood" => ["collingwood", "magpies", "pies", "col", "coll"],
-                "Essendon" => ["essendon", "bombers", "ess"],
+                "Essendon" => ["essendon", "bombers", "ess", "dons"],
                 "Fremantle" => ["fremantle", "dockers", "fre", "freo"],
                 "Geelong" => ["geelong", "cats", "gee", "geel"],
                 "Gold Coast" => ["gold coast", "suns", "gc", "gcfc"],
@@ -370,7 +370,7 @@ module Stats
     in_progress_game = in_progress.find { |array| array.include? team}
     completed_game = completed.find { |array| array.include? team}
     result_hash = {}
-    
+
     if in_progress_game != nil # If the team is playing
       result_hash[:gameid] = in_progress_game[0]
       result_hash[:home_team] = in_progress_game[1] # Hometeam is always first

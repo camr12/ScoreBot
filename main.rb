@@ -47,7 +47,7 @@ bot.command(:afl) do |event, *team|
                 "Carlton" => ["carlton", "blues", "car", "carl"],
                 "Collingwood" => ["collingwood", "magpies", "pies", "col",
                                                                     "coll"],
-                "Essendon" => ["essendon", "bombers", "ess"],
+                "Essendon" => ["essendon", "bombers", "ess", "dons"],
                 "Fremantle" => ["fremantle", "dockers", "fre", "freo"],
                 "Geelong" => ["geelong", "cats", "gee", "geel"],
                 "Gold Coast" => ["gold coast", "suns", "gc", "gcfc"],
