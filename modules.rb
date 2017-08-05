@@ -168,10 +168,14 @@ module Afl
     end
   end
 
-  def self.in_progress_games # Get all in progress games, print on newlines
+  def in_progress_games # Get all in progress games, print on newlines
     games = open("http://dtlive.com.au/afl/viewgames.php").read
     in_progress = games.scan(/GameID=(\d+)">[^>]+>\s+(?:([A-Za-z ]+[^<]+)\s+vs[^>]+>\s*([^>]+)|([^>]+)\s+vs[^>]+>\s*([A-Za-z ]+[^<]+))\s+\(in progress\)</)
-    if in_progress != nil # If games are on
+    if in_progress.empty? # If games are on
+      result = "Sorry, no games are on! <:vicbias:275912832992804865>"
+      puts result
+      return result
+    else
       in_progress.map! { |inner| inner[0] } #get only IDs
       gametracker = []
       numerical = 0
@@ -260,9 +264,6 @@ module Afl
         result += "**#{gamehash[:home_team]}** vs **#{gamehash[:away_team]}** at #{gamehash[:location]} - Q#{gamehash[:current_qtr]} - #{teams[gamehash[:home_team]]} #{gamehash[:home_goals]}.#{gamehash[:home_points]}.#{gamehash[:home_total]} - #{teams[gamehash[:away_team]]} #{gamehash[:away_goals]}.#{gamehash[:away_points]}.#{gamehash[:away_total]} - #{gamehash[:finalmargin]}\n"
       end
       puts result
-      return result
-    else
-      result = "Sorry, no games are on! <:vicbias:275912832992804865>"
       return result
     end
   end
