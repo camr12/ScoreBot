@@ -168,7 +168,7 @@ module Afl
     end
   end
 
-  def in_progress_games # Get all in progress games, print on newlines
+  def self.in_progress_games # Get all in progress games, print on newlines
     games = open("http://dtlive.com.au/afl/viewgames.php").read
     in_progress = games.scan(/GameID=(\d+)">[^>]+>\s+(?:([A-Za-z ]+[^<]+)\s+vs[^>]+>\s*([^>]+)|([^>]+)\s+vs[^>]+>\s*([A-Za-z ]+[^<]+))\s+\(in progress\)</)
     if in_progress.empty? # If games are on
