@@ -259,6 +259,9 @@ module Afl
       result += "**#{gamehash[:home_team]}** vs **#{gamehash[:away_team]}** at #{gamehash[:location]} - Q#{gamehash[:current_qtr]} - #{teams[gamehash[:home_team]]} #{gamehash[:home_goals]}.#{gamehash[:home_points]}.#{gamehash[:home_total]} - #{teams[gamehash[:away_team]]} #{gamehash[:away_goals]}.#{gamehash[:away_points]}.#{gamehash[:away_total]} - #{gamehash[:finalmargin]}\n"
     end
     puts result
+    if result == nil # If no games are on
+      result = "Sorry, no games are on! <:vicbias:275912832992804865>"
+    end
     return result
   end
 
