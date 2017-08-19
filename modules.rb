@@ -172,7 +172,7 @@ module Afl
     games = open("http://dtlive.com.au/afl/viewgames.php").read
     in_progress = games.scan(/GameID=(\d+)">[^>]+>\s+(?:([A-Za-z ]+[^<]+)\s+vs[^>]+>\s*([^>]+)|([^>]+)\s+vs[^>]+>\s*([A-Za-z ]+[^<]+))\s+\(in progress\)</)
     if in_progress.empty? # If games are on
-      result = "Sorry, no games are on! <:vicbias:275912832992804865>"
+      result = "Sorry, no games are on! <:vicbias:275912832992804865> <:rupert:345506442041622538>"
       puts result
       return result
     else
