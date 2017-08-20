@@ -364,6 +364,36 @@ end
 
 module Stats
   def self.get_gameid(team)
+  	bot = Discordrb::Commands::CommandBot.new token: $token, client_id: $client_id, prefix: '!', help_command: false
+    ## Start ZedFish's Code Block
+
+    zedteams = {"Adelaide" => ["adelaide", "crows", "ade", "adel"], # Update for main.rb as well!
+                "Brisbane" => ["brisbane", "lions", "bl", "bris", "fitzroy", "bears"],
+                "Carlton" => ["carlton", "blues", "car", "carl"],
+                "Collingwood" => ["collingwood", "magpies", "pies", "col", "coll"],
+                "Essendon" => ["essendon", "bombers", "ess", "dons"],
+                "Fremantle" => ["fremantle", "dockers", "fre", "freo"],
+                "Geelong" => ["geelong", "cats", "gee", "geel"],
+                "Gold Coast" => ["gold coast", "suns", "gc", "gcfc"],
+                "GWS Giants" => ["greater western sydney", "giants", "gws"],
+                "Hawthorn" => ["hawthorn", "hawks", "haw", "hawtron"],
+                "Melbourne" => ["melbourne", "demons", "dees", "mel", "melb"],
+                "North Melbourne" => ["north melbourne", "kangaroos", "roos", "nmfc", "norf", "north"],
+                "Port Adelaide" => ["port adelaide", "power", "port", "pa", "pafc", "pear"],
+                "Richmond" => ["richmond", "tigers", "rich", "tiges", "ninthmond"],
+                "St Kilda" => ["st kilda", "saints", "stk", "street kilda", "satin kilda"],
+                "Sydney" => ["sydney", "swans", "syd", "south melbourne", "smfc", "bloods"],
+                "West Coast" => ["west coast", "eagles", "wce", "wc", "weagles"],
+                "Western Bulldogs" => ["western bulldogs", "bulldogs", "dogs", "wb", "footscray"]}
+
+    zedteams.each do |key, array|
+      if array.include?(team)
+        team = key
+      end
+    end
+
+
+    ## End ZedFish's Code Block
     # Returns hash of:
     # :gameid
     # :home_team
@@ -371,7 +401,7 @@ module Stats
 
     games = open("http://dtlive.com.au:80/afl/viewgames.php").read
     in_progress = games.scan(/GameID=(\d+)">[^>]+>\s+(?:([A-Za-z ]+[^<]+)\s+vs[^>]+>\s*([^>]+)|([^>]+)\s+vs[^>]+>\s*([A-Za-z ]+[^<]+))\s+\(in progress\)</)
-    completed = games.scan(/GameID=(\d+)">[^>]+>\s+(?:([A-Za-z ]+[^<]+)\s+vs[^>]+>\s*([^>]+)|([^>]+)\s+vs[^>]+>\s*([A-Za-z ]+[^<]+))<small>\(completed\)<\/small></)
+    completed = games.scan(/GameID=(\d+)">[^>]+>\s+(?:([A-Za-z ]+[^<]+)\s+vs[^>]+>\s*([^>]+)|([^>]+)\s+vs[^>]+>\s*([A-Za-z ]+[^<]+))\s<small>\(completed\)<\/small></)
 
     in_progress_game = in_progress.find { |array| array.include? team}
     completed_game = completed.find { |array| array.include? team}
@@ -380,12 +410,12 @@ module Stats
     if in_progress_game != nil # If the team is playing
       result_hash[:gameid] = in_progress_game[0]
       result_hash[:home_team] = in_progress_game[1] # Hometeam is always first
-      result_hash[:away_team] = in_progress_game[2]
+      result_hash[:away_team] = in_progress_game[2].strip
       return result_hash # Return the current game id
     elsif in_progress_game == nil # If the team isn't playing
       result_hash[:gameid] = completed_game[0]
       result_hash[:home_team] = completed_game[1] # Hometeam is always first
-      result_hash[:away_team] = completed_game[2]
+      result_hash[:away_team] = completed_game[2].strip
       return result_hash # Return most recent game ID (probably)
     end
 
