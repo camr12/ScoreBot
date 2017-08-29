@@ -56,9 +56,17 @@ module Cric
     if score['stat'].empty? # If match is scheduled, return
       return
     elsif score['stat'].include?('won by') # If match is finished, return result
-      result[:final] = score['stat']
+      if /((?:[A-z][a-z]+)).*?(\d+)\/(\d+)/.match(score['score'])
+        result[:final] = /((?:[A-z][a-z]+)).*?(\d+)\/(\d+)/.match(score['score'])
+      else
+        result[:final] = score['stat']
+      end
     elsif score['stat'].include?('lead by') # If match is in the lead-by stage, return score
-      result[:final] = score['stat']
+      if /((?:[A-z][a-z]+)).*?(\d+)\/(\d+)/.match(score['score'])
+        result[:final] = /((?:[A-z][a-z]+)).*?(\d+)\/(\d+)/.match(score['score'])
+      else
+        result[:final] = score['stat']
+      end
     elsif score['stat'].include?('won the toss') || score['stat'].include?('uncontested') # If the toss has been won, return toss status or score (if available)
       if /((?:[A-z][a-z]+)).*?(\d+)\/(\d+)/.match(score['score'])
         result[:final] = /((?:[A-z][a-z]+)).*?(\d+)\/(\d+)/.match(score['score'])
