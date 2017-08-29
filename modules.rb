@@ -53,56 +53,18 @@ module Cric
     score = fetch_scorecric(id)
     result = {}
 
-    if score.key?('score') && ['score'].include?('Match')
-      result[:final] = score['innings-requirement'] << '    '
-      result[:final]
-    elsif score['innings-requirement'].include?('scheduled') && score['team-2'].include?(team)
-      result[:schedule] = score['innings-requirement']
-      result[:team] = score['team-1']
-      result[:time] = gmttime(score['dateTimeGMT'])
-      result[:date] = gmtdate(score['dateTimeGMT'])
-      result[:schedule].gsub!(/at\s(.*?\stime)/, "at #{result[:time]} Sydney time (\\1)")
-      result[:schedule].gsub!(/\(\d\d:\d\d GMT\)/, "")
-      result[:final] = "#{result[:schedule]}against #{result[:team]} on #{result[:date]}." << ' '
-      result[:final]
-    elsif score['innings-requirement'].include?('scheduled') && score['team-1'].include?(team)
-      result[:schedule] = score['innings-requirement']
-      result[:team] = score['team-2']
-      result[:time] = gmttime(score['dateTimeGMT'])
-      result[:date] = gmtdate(score['dateTimeGMT'])
-      result[:schedule].gsub!(/at\s(.*?\stime)/, "at #{result[:time]} Sydney time (\\1)")
-      result[:schedule].gsub!(/\(\d\d:\d\d GMT\)/, "")
-      result[:final] = "#{result[:schedule]}against #{result[:team]} on #{result[:date]}." << ' '
-      result[:final]
-    elsif score['matchStarted'] == true && score['innings-requirement'].include?('toss') && !score.key?('score')
-      result[:toss] = score['innings-requirement']
-      result[:final] = "#{result[:toss]}"
-    elsif score['matchStarted'] == true && !score['innings-requirement'].include?('toss') && !score['innings-requirement'].include?('won')
-      tz = TZInfo::Timezone.get('Australia/Sydney')
-      score_dirty = score['score']
-      rr = Cric.runrate(score_dirty)
-      score_clean = score_dirty.sub(/^([\w ]+) (\d+)\/(\d+)/, '\1 \3/\2')
-      required = score['innings-requirement']
-      published = Time.parse(score['provider']['pubDate'])
-      pub_date1 = tz.utc_to_local(published)
-      pub_date2 = pub_date1.strftime('%I:%M %p')
-      result[:final] = "#{score_clean} - #{rr} RPO. Updated at #{pub_date2}. \n \n#{required}"
-      result[:final]
-    elsif score['matchStarted'] == true && !score['innings-requirement'].include?('toss') && score['innings-requirement'].include?('won')
-      result[:date] = gmtdate(score['dateTimeGMT'])
-      result[:scorecard] = "<http://www.espncricinfo.com/ci/engine/match/#{id}.html>"
-      result[:final] = "#{score['innings-requirement']} on #{result[:date]}.\nLink to scorecard: #{result[:scorecard]}"
-      result[:final]
-    elsif score['matchStarted'] == true
-      tz = TZInfo::Timezone.get('Australia/Sydney')
-      score_dirty = score['score']
-      published = Time.parse(score['provider']['pubDate'])
-      pub_date1 = tz.utc_to_local(published)
-      pub_date2 = pub_date1.strftime('%I:%M %p')
-      rr = runrate(score_dirty)
-      score_clean = score_dirty.sub(/^([\w ]+) (\d+)\/(\d+)/, '\1 \3/\2')
-      result[:final] = "#{score_clean} - #{rr} RPO. Updated at #{pub_date2}."
-      result[:final]
+    if score['stat'].empty? # If match is scheduled, return
+      return
+    elsif score['stat'].include?('won by') # If match is finished, return result
+      result[:final] = score['stat']
+    elsif score['stat'].include?('lead by') # If match is in the lead-by stage, return score
+      result[:final] = score['stat']
+    elsif score['stat'].include?('won the toss') || score['stat'].include?('uncontested') # If the toss has been won, return toss status or score (if available)
+      if /((?:[A-z][a-z]+)).*?(\d+)\/(\d+)/.match(score['score'])
+        result[:final] = /((?:[A-z][a-z]+)).*?(\d+)\/(\d+)/.match(score['score'])
+      else
+        result[:final] = score['stat']
+      end
     end
   end
 
