@@ -15,7 +15,7 @@ bot = Discordrb::Commands::CommandBot.new token: token, client_id: client_id, pr
 
 bot.bucket :afl, limit: 1, time_span:900
 
-bot.command(:cricket, bucket: :afl) do |event, *team|
+bot.command(:cricket) do |event, *team|
   newteam = team.join(" ")
   score = Cric.cricket_score(newteam)
   event.respond "#{score}"
