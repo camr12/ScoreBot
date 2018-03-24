@@ -150,13 +150,13 @@ module Afl
       gametracker = []
       numerical = 0
       teams = {"Adelaide"=>"<:crows:240102697196453888>",
-               "Brisbane"=>"<:lions:240107932836954115>",
+               "Brisbane"=>"<:lions:411094974768218113>",
                "Carlton"=>"<:blues:240110286705524737>",
-               "Collingwood"=>"<:pies:240111431226359809>",
+               "Collingwood"=>"<:pies:411091538987450368>",
                "Essendon"=>"<:dons:240112429344751616>",
-               "Geelong"=>"<:cats:240116808634335234>",
-               "GWS Giants"=>"<:gws:240123319104438273>",
-               "Hawthorn"=>"<:hawks:246532872217952266>",
+               "Geelong"=>"<:cats:411097609852420117>",
+               "GWS Giants"=>"<:gws:411091476337131520>",
+               "Hawthorn"=>"<:hawks:411101015350444033>",
                "Melbourne"=>"<:dees:246534269931880449>",
                "St Kilda"=>"<:saints:246535544106909697>",
                "Bulldogs"=>"<:dogs:246535548766912512>",
@@ -167,7 +167,7 @@ module Afl
                "Richmond"=>"<:tigers:246537629225582592>",
                "Gold Coast"=>"<:suns:246541592612175872>",
                "Fremantle"=>"<:freo:248060573512761346>",
-               "West Coast"=>"<:eagles:297781448507785216>"}
+               "West Coast"=>"<:eagles:411091603923533824>"}
 
       in_progress.each do |gameid|
         numerical += 1
